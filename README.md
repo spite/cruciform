@@ -19,6 +19,7 @@ Credits
 -------
 
 Jaume Sanchez [http://www.clicktorelease.com](http://www.clicktorelease.com) [http://twitter.com/thespite](@thespite)
+
 Emil Karlsson [http://twitter.com/sejnulla](@Sejnulla)
 
 Music by Cliff Martinez
