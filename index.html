@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+	<title>cru·ci·form</title>
+
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<meta property="og:url" content="http://www.clicktorelease.com/code/cruciform"/>
+	
+	<meta property="og:title" content="cru·ci·form"/> 
+	<meta property="og:description" content="A study in architectural visualisation"/> 
+	<meta property="og:image" content="http://www.clicktorelease.com/code/cruciform/thumb.jpg"/> 
+	<meta name="description" content="A study in architectural visualisation">
+	<meta itemprop="name" content="cru·ci·form">
+	<meta itemprop="description" content="A study in architectural visualisation">
+	<meta itemprop="image" content="http://www.clicktorelease.com/code/cruciform/thumb.jpg">
+
+	<link href='http://fonts.googleapis.com/css?family=Raleway:400,200,600' rel='stylesheet' type='text/css'>
+
+	<style>
+		*{box-sizing: border-box; margin: 0; padding: 0; }
+		body{overflow:hidden; background-color: black; font-family: Raleway, sans-serif; color: white; white-space: nowrap; }
+		.rs-base{ display: none}
+		#intro{ z-index: 100; position: absolute; left: 50%; top: 50%; transform: translate3d( -50%, -50%, 0 ); -webkit-transform: translate3d( -50%, -50%, 0 ); text-align: center; opacity: 0; pointer-events: none;}
+		p{ font-weight: 100; font-size: 14px }
+		h1{ font-weight: 500; font-size: 47px;}
+		span{ margin-right: 2.5em;}
+		#credits{ z-index: 100; position: absolute; left: 50%; top: 50%; transform: translate3d( -50%, 50px, 0 );-webkit-transform: translate3d( -50%, 50px, 0 ); text-align: center; opacity: 1; line-height: 2em; opacity: 0; pointer-events: none; }
+		a{ color: inherit; text-decoration: none;}
+		a:hover{ text-decoration: underline;}
+		#credits p{ font-size: 14px; }
+		#progress{ position: absolute; left: 0; top: 50%; margin-top: -1px; height: 2px; background-color: white; transition: opacity 500ms ease-out; will-change: opacity; }
+		#tapToStart{ position: absolute; left: 0; right: 0; top: 0; bottom: 0; width: 100%; height: 100%; transition: opacity 500ms ease-out; will-change: pointer-events: auto;}
+		.hidden{ opacity: 0; pointer-events: none;}
+		#tapToStart p{ position: absolute; left: 0; right: 0; top: 50%; margin-top: -2em; text-align: center; }
+		#headphones{ position: absolute; left: 50%; top: 25%; margin-left: -5vh; margin-top: -5vh; width: 10vh; height: 10vh; opacity: 0; background: url( assets/headphones.svg ); background-size: cover; transition: opacity 500ms ease-out; will-change: opacity; }
+		#pointer{ position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; margin-left: -16px; margin-top: -16px; border: 1px solid #ff00ff;}
+
+		#selection{ z-index: 200;position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: auto; white-space: normal; transition: opacity 500ms ease-out;}
+		.bkg{ position: fixed; background-image: url( assets/bkg.jpg ); background-size: cover; background-repeat: no-repeat; background-position: 50% 50%;  opacity: .3; left: 0; top: 0; right: 0; width: 100%; height: 100%; }
+		#block { position: absolute; left: 50%; top: 50px; width: 600px; margin-left: -300px; }
+		#block p{ font-weight: 100;  margin-bottom: 10px; line-height: 1.4em; }
+		#block h1{ font-weight: 500; font-size: 45px; margin-bottom: 20px;}
+		#block ul{ margin-left: 0; list-style-type: none; margin-top: 1em; margin-bottom: 2em;}
+		#block li{ margin-bottom: .5em; cursor: pointer; color: #aaa;}
+		#block li:hover{ color: white;}
+		#block li b{ width: 10em; display: inline-block;}
+
+		@media only screen and (max-width : 690px) {
+			#block{ width: 90%; margin-left: -45%;}
+			#block p{ font-size: 12px;}
+			ul{ width: 100%;}
+			#block li span{display: block;}
+			#block li span:nth-child(2){ margin-left: .6em;}
+		}
+		
+
+	</style>
+</head>
+<body>
+
+	<div id="intro" >
+		<p>Study in architecture visualisation</p>
+		<h1>cru·ci·form</h1>
+	</div>
+
+	<div id="credits">
+		<p><a href="http://twitter.com/thespite"><b>Jaume</b> Sanchez</a> <span></span><a href="https://twitter.com/sejnulla/"><b>Emil</b> Karlsson</a></p>
+		<p>Music: <i>Sail to Europe - <b>Cliff</b> Martinez</i></p>
+	</div>
+
+	<div id="progress"></div>
+
+	<div id="tapToStart" class="hidden" ><p>Tap to start</p></div>
+
+	<div id="headphones" ></div>
+
+	<!--<div id="pointer"></div>-->
+
+	<div id="selection">
+		<div class="bkg" ></div>
+		<div id="block">
+			<h1>cru·ci·form</h1>
+			<p>Please select a quality preset to play.</p>
+			<p><i>It's difficult to choose an option for you, since it would be a blind guess: there's just too many devices out there and very little real info we can use in JavaScript.</i></p>
+			<p>On mobile or tablet, try LOW or NORMAL.<br/>
+			On desktop, try NORMAL or HIGH.<br/>
+			If your selection doesn't perform well, try LOW or VERY LOW.</p>
+			<p><b>Note:</b> by popular demand, you can go into <b>interactive mode</b> by tapping/clicking <b>three times</b>.</p>
+			<ul>
+				<li data-url="dof=false&post=false"><span>- <b>Very low quality</b></span> <span>No postprocessing.</li>
+				<li data-url="dof=false&post=true&scale=true"><span>- <b>Low quality</b></span> <span>Postprocessing without DOF, half-resolution</span></li>
+				<li data-url="dof=true&post=true&scale=true"><span>- <b>Normal quality</b></span> <span>Full postprocessing, half-resolution</span></li>
+				<li data-url="dof=true&post=true&scale=false"><span>- <b>High quality</b></span> <span>Full postprocessing, full-resolution</span></li>
+			</ul>
+			<p>Enjoy!<br/><i><a href="http://twitter.com/thespite">@thespite</a> + <a href="https://twitter.com/sejnulla/">@sejnulla</a></i></p>
+		</div>
+	</div>
+
+<script src="js/three.min.js"></script>
+<!--<script src="js/DDSLoader.js"></script>-->
+<script src="js/OBJLoader.js"></script>
+<script src="js/OrbitControls.js"></script>
+<script src="js/ImprovedNoise.js"></script>
+<script src="Wagner/Wagner.js"></script>
+<script src="Wagner/Wagner.base.js"></script>
+<script src="Wagner/ShaderLoader.js"></script>
+<script src="js/timeline.js"></script>
+<script src="js/storyboard.js"></script>
+
+<script type="x-shader/x-vertex" id="vertexShader">
+
+attribute vec4 tangent;
+varying vec3 pos, view;
+varying mat3 tbnMatrix;
+varying vec2 vUv;
+uniform vec2 repeatUV;
+uniform float bumpiness;
+
+mat3 m3( mat4 mIn ) {
+
+	mat3 mOut;
+
+	mOut[ 0 ][ 0 ] = mIn[ 0 ][ 0 ]; 
+	mOut[ 0 ][ 1 ] = mIn[ 0 ][ 1 ]; 
+	mOut[ 0 ][ 2 ] = mIn[ 0 ][ 2 ]; 
+
+	mOut[ 1 ][ 0 ] = mIn[ 1 ][ 0 ]; 
+	mOut[ 1 ][ 1 ] = mIn[ 1 ][ 1 ]; 
+	mOut[ 1 ][ 2 ] = mIn[ 1 ][ 2 ]; 
+
+	mOut[ 2 ][ 0 ] = mIn[ 2 ][ 0 ]; 
+	mOut[ 2 ][ 1 ] = mIn[ 2 ][ 1 ]; 
+	mOut[ 2 ][ 2 ] = mIn[ 2 ][ 2 ]; 
+
+	return mOut;
+}
+
+void main()  {
+
+	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+	pos = vec3(modelMatrix * vec4( position, 1. ) );  
+
+	if( bumpiness != 0. ){
+		vec3 correctedTangent = m3( modelMatrix ) * tangent.xyz;
+		vec3 binormal = m3( modelMatrix ) * cross(normal, correctedTangent.xyz );
+		vec3 normal = m3( modelMatrix ) * normal; 
+
+		tbnMatrix = mat3( normalize( correctedTangent ), normalize( binormal ), normalize( normal ) );
+	} else {
+		tbnMatrix = mat3( normal, normal, normal );
+	}
+
+	view = pos - cameraPosition;
+
+	vUv = uv * repeatUV;
+
+}
+
+</script>
+
+<script type="x-shader/x-vertex" id="fragmentShader">
+#ifdef TEXTURELOD
+#extension GL_EXT_shader_texture_lod : enable
+#endif
+
+varying vec3 pos, view;
+varying vec2 vUv;
+varying mat3 tbnMatrix;
+uniform samplerCube envMap;
+uniform sampler2D normalMap;
+uniform sampler2D detailNormalMap;
+uniform sampler2D diffuseMap;
+uniform sampler2D specularMap;
+uniform float bumpiness;
+uniform float roughness;
+
+const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 6.32 );
+//const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 7.961074 );
+const vec3 cubeMapPos = vec3( 0, 0., 0 ); 
+
+vec3 gamma(vec3 color){
+	return pow(color, vec3(1.0/2.0));
+}
+
+vec3 parallaxCorrectNormal( vec3 v, vec3 cubeSize, vec3 cubePos ) {
+
+	vec3 nDir = normalize(v);
+	vec3 rbmax = (   .5 * ( cubeSize - cubePos ) - pos ) / nDir;
+	vec3 rbmin = ( - .5 * ( cubeSize - cubePos ) - pos ) / nDir;
+
+	vec3 rbminmax;
+	rbminmax.x = ( nDir.x > 0. )?rbmax.x:rbmin.x;
+	rbminmax.y = ( nDir.y > 0. )?rbmax.y:rbmin.y;
+	rbminmax.z = ( nDir.z > 0. )?rbmax.z:rbmin.z;
+
+	float correction = min(min(rbminmax.x, rbminmax.y), rbminmax.z);
+	vec3 boxIntersection = pos + nDir * correction;
+
+	return boxIntersection - cubePos;
+}
+
+void main()  {
+
+	vec3 vVec = normalize( view );  
+
+	vec4 bumpNormal;
+	vec3 nVec;
+
+	bumpNormal = mix( texture2D( normalMap, vUv ), texture2D( detailNormalMap, 50. * vUv ), .5 );  	
+	vec3 n = bumpNormal.rgb * 2.0 - 1.0;
+	vec3 modifiedTangent = normalize( vec3( n.xy * bumpiness, sqrt( 1. - n.y * n.y - n.x * n.x ) ) );
+	nVec = tbnMatrix * modifiedTangent;
+
+	vec3 rVec = parallaxCorrectNormal( reflect( vVec, nVec ), cubeMapSize, cubeMapPos );
+	#ifdef TEXTURELOD
+	vec3 env = textureCubeLodEXT( envMap, rVec, roughness ).rgb;
+	#else
+	vec3 env = textureCube( envMap, rVec, roughness ).rgb;
+	#endif
+
+	float rim = 1. - abs( dot( nVec, vVec) );
+
+	vec3 diffuse = texture2D( diffuseMap, vUv ).rgb;
+	vec3 specular = texture2D( specularMap, vUv ).rgb;
+	float r = clamp( specular.r + .2 * rim, 0., 1. );
+	vec3 base = mix( diffuse, env, r );			
+
+	gl_FragColor = vec4( base, 1. );
+
+}
+
+</script>
+
+<script type="x-shader/x-vertex" id="fragment2Shader">
+#ifdef TEXTURELOD
+#extension GL_EXT_shader_texture_lod : enable
+#endif
+
+varying vec3 pos, view;
+varying vec2 vUv;
+varying mat3 tbnMatrix;
+uniform samplerCube envMap;
+uniform sampler2D normalMap;
+uniform sampler2D detailNormalMap;
+uniform sampler2D diffuseMap;
+uniform sampler2D specularMap;
+uniform float bumpiness;
+uniform float roughness;
+
+const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 6.32 );
+//const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 7.961074 );
+const vec3 cubeMapPos = vec3( 0, 0., 0 ); 
+
+vec3 gamma(vec3 color){
+	return pow(color, vec3(1.0/2.0));
+}
+
+vec3 parallaxCorrectNormal( vec3 v, vec3 cubeSize, vec3 cubePos ) {
+
+	vec3 nDir = normalize(v);
+	vec3 rbmax = (   .5 * ( cubeSize - cubePos ) - pos ) / nDir;
+	vec3 rbmin = ( - .5 * ( cubeSize - cubePos ) - pos ) / nDir;
+
+	vec3 rbminmax;
+	rbminmax.x = ( nDir.x > 0. )?rbmax.x:rbmin.x;
+	rbminmax.y = ( nDir.y > 0. )?rbmax.y:rbmin.y;
+	rbminmax.z = ( nDir.z > 0. )?rbmax.z:rbmin.z;
+
+	float correction = min(min(rbminmax.x, rbminmax.y), rbminmax.z);
+	vec3 boxIntersection = pos + nDir * correction;
+
+	return boxIntersection - cubePos;
+}
+
+void main()  {
+
+	vec3 vVec = normalize( view );  
+
+	vec4 bumpNormal;
+	vec3 nVec;
+
+	bumpNormal = mix( texture2D( normalMap, vUv ), texture2D( detailNormalMap, 50. * vUv ), .5 );  	
+	vec3 n = bumpNormal.rgb * 2.0 - 1.0;
+	vec3 modifiedTangent = normalize( vec3( n.xy * bumpiness, sqrt( 1. - n.y * n.y - n.x * n.x ) ) );
+	nVec = tbnMatrix * modifiedTangent;
+
+	vec3 rVec = parallaxCorrectNormal( reflect( vVec, nVec ), cubeMapSize, cubeMapPos );
+	#ifdef TEXTURELOD
+	vec3 env = textureCubeLodEXT( envMap, rVec, roughness ).rgb;
+	#else
+	vec3 env = textureCube( envMap, rVec, roughness ).rgb;
+	#endif
+
+	float rim = 1. - abs( dot( nVec, vVec) );
+
+	vec3 base = ( .5 + .2 * rim ) * env;
+
+	gl_FragColor = vec4( base, 1. );
+
+}
+
+</script>
+
+<script>
+
+	'use strict'
+
+	WAGNER.vertexShadersPath = 'Wagner/vertex-shaders';
+	WAGNER.fragmentShadersPath = 'Wagner/fragment-shaders';
+	WAGNER.assetsPath = 'Wagner/assets/';
+
+	var audio = new Audio();
+
+	var composer;
+	var vignettePass, FXAAPass, bloomPass, lensPass, DOFPass, rgbSplitPass, noisePass;
+	var bokehPass, bleachPass;
+
+	var scene, camera, controls, renderer, cubeCamera, cubeMapGenerated = false;
+	var sphere;
+
+	var depthMaterial = new THREE.MeshBasicMaterial();
+
+	var dof = true, bloom = true, fxaa = true, vignette = true, bleach = true, 
+		lens = false, rgbSplit = true, bokeh = false, noise = true;
+
+	var startTime = Date.now();
+	var tmpVector = new THREE.Vector3();
+	var raycaster = new THREE.Raycaster();
+	var centerVector = new THREE.Vector2( 0, 0 );
+	var depthTexture = null;
+	var baseMaterial, shinyMaterial;
+
+	WAGNER.BokehPoisonPass = function() {
+
+		WAGNER.Pass.call( this );
+		WAGNER.log( 'BokehPoison Pass constructor' );
+		this.loadShader( 'bokeh-poison-dof-fs.glsl' );
+
+		this.params.amount = 10;
+		this.params.radius = 1;
+		this.params.tBias = null
+		this.params.focalDistance = 1;
+		this.params.aperture = 1;
+
+	};
+
+	WAGNER.BokehPoisonPass.prototype = Object.create( WAGNER.Pass.prototype );
+
+	WAGNER.BokehPoisonPass.prototype.run = function( c ) {
+
+		this.shader.uniforms.amount.value = this.params.amount;
+		this.shader.uniforms.radius.value = this.params.radius;
+		this.shader.uniforms.focalDistance.value = this.params.focalDistance;
+		this.shader.uniforms.aperture.value = this.params.aperture;
+		this.shader.uniforms.tBias.value = this.params.tBias;
+		c.pass( this.shader );
+
+	};
+
+	var intro = document.getElementById( 'intro' ),
+	credits = document.getElementById( 'credits' ),
+	tapToStart = document.getElementById( 'tapToStart' );
+
+	var iNoise = new ImprovedNoise();
+
+	var useAudio = true;
+	var intro, title, textScene, textCamera;
+	var manual = false;
+	//manual = true;
+
+	var roomModel, cubeModel;
+	
+	var progressIndicator = ( function getProgressFn() {
+
+		var progress = document.getElementById( 'progress' );
+		return function( p ) {
+
+			progress.style.width = p + '%';
+		};
+
+	} )();
+
+	var isMobile = 'ontouchstart' in window;
+	var hashOptions = {};
+
+	function selectQuality() {
+
+		var links = document.querySelectorAll( 'div ul li' );
+		[].forEach.call( links, function( li ) {
+			var url = li.getAttribute( 'data-url' );
+			li.addEventListener( 'click', function( e ) {
+				var hashFields = url.split( '&' );
+				hashFields.forEach( function( e ) { 
+					var f = e.split( '=' ); 
+					var obj = {}
+					hashOptions[ f [ 0 ] ] = f[ 1 ] == 'true'?true:false;
+				} );
+				document.getElementById( 'selection' ).classList.add( 'hidden' );
+				init();
+				e.preventDefault();
+			} );
+		} );
+
+	}
+
+	function goInteractive() {
+
+		manual = true;
+		controls = new THREE.OrbitControls( camera );
+		sphere.visible = true;
+		sphere.scale.set( .2, .2, .2 );
+		vignettePass.params.boost = 2;
+
+	}
+
+	function init() {
+
+		document.getElementById( 'headphones' ).style.opacity = 1;
+
+		if( hashOptions.dof != undefined ) dof = hashOptions.dof;
+
+		scene = new THREE.Scene();
+		var aspectRatio = window.innerWidth / window.innerHeight;
+		camera = new THREE.PerspectiveCamera( 75, aspectRatio, 1, 30 );
+		camera.target = new THREE.Vector3();
+		camera.position.set( 8.48048079936136, -2.086495492733194, 0.3702657880176793 );
+
+		if( manual ) {
+			controls = new THREE.OrbitControls( camera );
+			controls.damping = 0.2;
+		}
+
+		renderer = new THREE.WebGLRenderer( { antialias: true });
+		document.body.appendChild( renderer.domElement );
+		var pixelRatioScale = isMobile?.5:1;
+		if( hashOptions.scale != undefined ) pixelRatioScale = hashOptions.scale?.5:1;
+		renderer.setPixelRatio( pixelRatioScale * window.devicePixelRatio );
+		renderer.setClearColor( 0xffffff );
+		renderer.autoClear = false;
+		var textureLOD = null;//renderer.context.getExtension( 'EXT_shader_texture_lod' );
+
+		var fragmentPrefix = '';
+		if( textureLOD ) fragmentPrefix = '#define TEXTURELOD';
+
+		composer = new WAGNER.Composer( renderer, { useRGBA: false } );
+		vignettePass = new WAGNER.Vignette2Pass();
+		vignettePass.params.reduction = 2;
+		FXAAPass = new WAGNER.FXAAPass();
+		var bufferSize = isMobile?256:512;
+		bloomPass = new WAGNER.MultiPassBloomPass( bufferSize, bufferSize );
+		bloomPass.params.blurAmount = isMobile?.5:1;
+		DOFPass = new WAGNER.DOFPass();
+		//DOFPass = new WAGNER.BokehPoisonPass();
+		noisePass = new WAGNER.NoisePass();
+
+		noisePass.params.amount = .01;
+		
+		rgbSplitPass = new WAGNER.RGBSplitPass();
+		rgbSplitPass.params.delta.set( pixelRatioScale * 20, pixelRatioScale * 20 );
+
+		bokehPass = new WAGNER.BokehPoisonPass();
+
+		bleachPass = new WAGNER.BleachPass();
+
+		DOFPass.params.aperture = .01;
+
+		cubeCamera = new THREE.CubeCamera( .00000001, 10, 1024 ); // parameters: near, far, resolution
+		cubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter; // mipmap filter
+		cubeCamera.position.set( 0, 0 * 8.410262, 0 );
+		scene.add( cubeCamera );
+
+		window.addEventListener( 'resize', onWindowResize );
+
+		var sL = new ShaderLoader()
+		sL.add( 'depth-vs', 'Wagner/vertex-shaders/packed-depth-vs.glsl' );
+		sL.add( 'depth-fs', 'Wagner/fragment-shaders/packed-depth-fs.glsl' );
+		sL.load();
+		sL.onLoaded( function() {
+			depthMaterial = new THREE.ShaderMaterial( {
+				uniforms: {
+					mNear: { type: 'f', value: camera.near },
+					mFar: { type: 'f', value: camera.far }
+				},
+				vertexShader: this.get( 'depth-vs' ),
+				fragmentShader: this.get( 'depth-fs' ),
+				shading: THREE.SmoothShading
+			} );
+		} );
+
+		var diffuseTexture, normalTexture, specularTexture, displacementTexture;
+		var diffuseOrbTexture, normalOrbTexture, specularOrbTexture, lightOrbTexture;
+
+		onWindowResize();
+
+		function prepare() {
+
+			scene.add( roomModel );
+			
+			shinyMaterial = new THREE.ShaderMaterial( {
+				uniforms: {
+					bumpiness: { type: 'f', value: 1 },
+					repeatUV: { type: 'v2', value: new THREE.Vector2( 1, 1 ) },
+					diffuseMap: { type: 't', value: diffuseTexture },
+					specularMap: { type: 't', value: specularTexture },
+					normalMap: { type: 't', value: normalTexture },
+					detailNormalMap: { type: 't', value: displacementTexture },
+					envMap: { type: 't', value: cubeCamera.renderTarget },
+					specular: { type: 'f', value: 0 },
+					roughness: { type: 'f', value: 2 },
+				},
+				vertexShader: document.getElementById( 'vertexShader' ).textContent,
+				fragmentShader: fragmentPrefix + document.getElementById( 'fragmentShader' ).textContent,
+				side: THREE.FrontSide
+			} );
+
+			shinyMaterial.uniforms.normalMap.value.wrapS = 
+			shinyMaterial.uniforms.normalMap.value.wrapT =
+			shinyMaterial.uniforms.detailNormalMap.value.wrapS = 
+			shinyMaterial.uniforms.detailNormalMap.value.wrapT =
+			shinyMaterial.uniforms.diffuseMap.value.wrapS = 
+			shinyMaterial.uniforms.diffuseMap.value.wrapT =
+			shinyMaterial.uniforms.specularMap.value.wrapS = 
+			shinyMaterial.uniforms.specularMap.value.wrapT =
+			THREE.RepeatWrapping;
+
+			progressIndicator( 91 );
+
+			baseMaterial = new THREE.MeshBasicMaterial( { map: diffuseTexture } );
+
+			roomModel.children.forEach( function( e ) {
+				e.geometry.center();
+				e.geometry.computeTangents();
+				e.material = shinyMaterial;
+			} );
+
+			progressIndicator( 92 );
+
+			var m = new THREE.ShaderMaterial( {
+				uniforms: {
+					bumpiness: { type: 'f', value: 1 },
+					repeatUV: { type: 'v2', value: new THREE.Vector2( 1, 1 ) },
+					normalMap: { type: 't', value: normalOrbTexture },
+					detailNormalMap: { type: 't', value: displacementTexture },
+					envMap: { type: 't', value: cubeCamera.renderTarget }
+				},
+				vertexShader: document.getElementById( 'vertexShader' ).textContent,
+				fragmentShader: fragmentPrefix + document.getElementById( 'fragment2Shader' ).textContent,
+				side: THREE.DoubleSide
+			} );
+
+			m.uniforms.normalMap.value.wrapS = 
+			m.uniforms.normalMap.value.wrapT =
+			m.uniforms.detailNormalMap.value.wrapS = 
+			m.uniforms.detailNormalMap.value.wrapT =
+			THREE.RepeatWrapping;
+
+			progressIndicator( 93 );
+
+			var geometry = cubeModel.children[ 0 ].geometry;
+			
+			geometry.computeFaceNormals();
+			geometry.computeVertexNormals();
+			for( var j = 0; j < geometry.faces.length; j++ ){
+				var f = geometry.faces[ j ];
+				for( var k = 0; k < 3; k++ ) {
+					f.vertexTangents.push( new THREE.Vector4( 0, 0, 0, 1 ) );
+				}
+			}
+			geometry.hasTangents = true;
+			geometry.computeTangents();
+			geometry.center();
+
+			progressIndicator( 94 );
+
+			sphere = new THREE.Mesh( geometry, m );
+			scene.add( sphere );
+			sphere.position.x = -4;
+			sphere.scale.set( .25, .25, .25 );
+
+			progressIndicator( 95 );
+
+			ready();
+		}
+
+		function ready() {
+
+			scene.overrideMaterial = baseMaterial;
+			sphere.visible = false;
+			cubeCamera.updateCubeMap( renderer, scene );
+			scene.overrideMaterial = null;
+			cubeMapGenerated = true;
+			sphere.visible = true;
+
+			progressIndicator( 96 );
+
+			renderer.domElement.style.display = 'none';
+			renderer.render(scene, camera );
+			renderer.setClearColor( 0 );
+			renderer.clear();
+			renderer.setClearColor( 0xffffff );
+			renderer.domElement.style.display = 'block';
+
+			progressIndicator( 100 );
+
+			function startAudio() {
+
+				tapToStart.removeEventListener( 'click', startAudio );
+				tapToStart.classList.add( 'hidden' );
+
+				audio.addEventListener( 'canplay', function() {
+					startTime = Date.now();
+					if( !manual ) audio.play();
+					startRendering();
+				} )
+				if( !useAudio ) audio.volume = 0;
+				audio.preload = 'auto';
+				audio.autoplay = false;
+				audio.src = 'assets/track.mp3';
+				audio.play();
+
+			}
+
+			if( isMobile ) {
+				tapToStart.classList.remove( 'hidden' );
+				tapToStart.addEventListener( 'click', startAudio );
+			} else {
+				startAudio();
+			}
+
+			document.getElementById( 'progress' ).style.opacity = 0;
+
+		}
+
+		function startRendering() {
+
+			( function attachInteractiveModeTrigger() {
+				var count = 0;
+				document.body.addEventListener( 'click', function() {
+					count++;
+					if( count == 3 ) goInteractive();
+				} );
+				document.body.addEventListener( 'touchend', function() {
+					count++;
+					if( count == 3 ) goInteractive();
+				} );
+			} )();
+
+			document.getElementById( 'headphones' ).style.opacity = 0;
+			setTimeout( render, 1000 );
+
+		}
+
+		window.addEventListener( 'keydown', function( e ) {
+			/*if( e.keyCode == 32 ) {
+				startTime = Date.now();
+				audio.currentTime = 0;
+			}*/
+		} )
+
+		var l = new THREE.LoadingManager( 
+			function() { console.log( 'onLoad' ); prepare(); }, 
+			function( item, loaded, total ) { 
+				progressIndicator( loaded * 90 / total ) 
+			},
+			function() { console.log( 'onError' ) } 
+			);
+		var t = new THREE.TextureLoader( l );
+
+		var res = '4096';
+		t.load( 'assets/baked_' + res + '.jpg', function( t ) { diffuseTexture = t; } );
+		t.load( 'assets/spec_' + res + '.jpg', function( t ) { specularTexture = t; } );
+		t.load( 'assets/norm_' + res + '.jpg', function( t ) { normalTexture = t; } );
+
+		t.load( 'assets/displacement.jpg', function( t ) { displacementTexture = t; } );
+
+		t.load( 'assets/orb-norm.png', function( t ) { normalOrbTexture = t; } );
+
+		var m = new THREE.OBJLoader( l );
+		m.load( 'assets/hall.obj', function( m ) { roomModel = m; } );
+		m.load( 'assets/orb.obj', function( m ) { cubeModel = m; } );
+
+	}
+
+	function updateStory( t ) {
+
+		camera.position.x = averageData( storyline, t, 'x' );
+		camera.position.y = averageData( storyline, t, 'y' );
+		camera.position.z = averageData( storyline, t, 'z' );
+
+		camera.target.x = averageData( storyline, t, 'targetx' );
+		camera.target.y = averageData( storyline, t, 'targety' );
+		camera.target.z = averageData( storyline, t, 'targetz' );
+
+		camera.lookAt( camera.target );
+
+		//vignettePass.params.reduction = 3 + ( 10 - 10 * averageData( storyline, t, 'fade' ) );
+		vignettePass.params.boost = 2 * averageData( storyline, t, 'fade' );
+		vignettePass.params.boost += .2 * iNoise.noise( t, .234234, .565 );
+
+		var s = .2 * averageData( storyline, t, 'sphere' );
+		sphere.scale.set( s, s, s );
+		sphere.visible = s > .001;
+
+		sphere.position.x = averageData( storyline, t, 'orbx' );
+
+		sphere.rotation.y = averageData( storyline, t, 'sphereAngle' );
+
+		intro.style.opacity = averageData( storyline, t, 'text' );
+		credits.style.opacity = averageData( storyline, t, 'credits' );
+
+		var fov = averageData( storyline, t, 'fov' );
+		if( fov != camera.fov ) {
+			camera.fov = fov;
+			camera.updateProjectionMatrix();
+		}
+
+		DOFPass.params.aperture = averageData( storyline, t, 'aperture' );
+		DOFPass.params.autofocus = averageData( storyline, t, 'autofocus' );
+		DOFPass.params.fD = averageData( storyline, t, 'focalDistance' );
+
+		if( t > 120 ) credits.style.pointerEvents = 'auto';
+
+	}
+
+	function render() {
+
+		requestAnimationFrame(render);
+
+		if( !manual ){
+			var t = .001 * ( Date.now() - startTime );
+			if( useAudio ) t = audio.currentTime;
+			updateStory( t );
+		}
+
+		if( hashOptions.post == false ) {
+			renderer.setClearColor( 0xffffff );
+			renderer.render( scene, camera );
+			return;
+		}
+
+		composer.reset();
+
+		if( ( dof && DOFPass.params.aperture > 0 ) || bokeh ) {
+			scene.overrideMaterial = depthMaterial;
+			composer.render( scene, camera, null, depthTexture );
+			DOFPass.params.tBias = depthTexture;
+			bokehPass.params.tBias = depthTexture;
+
+			scene.overrideMaterial = null;
+			composer.render( scene, camera );
+		} else {
+			composer.render( scene, camera );
+		}
+
+		if( vignette ) composer.pass( vignettePass );
+		
+		if( rgbSplit ) composer.pass( rgbSplitPass );
+
+		if( ( dof && DOFPass.params.aperture > 0 ) ) {
+			if( DOFPass.params.autofocus ) {
+				raycaster.setFromCamera( centerVector, camera );
+				var intersects = raycaster.intersectObjects( [ sphere, roomModel ], true );
+				if( intersects.length ) {
+					DOFPass.params.focalDistance = 1 - intersects[ 0 ].distance / ( camera.far - camera.near );
+				}
+			} else {
+				DOFPass.params.focalDistance = DOFPass.params.fD;
+			}
+			composer.pass( DOFPass );
+		}
+
+		if( bloom ) composer.pass( bloomPass );
+
+		if( fxaa ) composer.pass( FXAAPass );
+
+		if( bokeh ) composer.pass( bokehPass );
+
+		if( bleach ) composer.pass( bleachPass );
+
+		if( noise ) composer.pass( noisePass );
+
+		composer.toScreen();
+
+	}
+
+	function onWindowResize() {
+
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+
+		composer.setSize( renderer.domElement.width, renderer.domElement.height );
+		depthTexture = WAGNER.Pass.prototype.getOfflineTexture( composer.width, composer.height, false );
+
+	}
+
+	window.addEventListener( 'load', selectQuality );
+
+</script>
+</body>
+</html>
+<script src="//cdn.webglstats.com/stat.js" defer="defer" async="async"></script>
