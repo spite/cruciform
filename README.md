@@ -18,9 +18,9 @@ Clone the repo or download the project files.
 Credits
 -------
 
-Jaume Sanchez [http://www.clicktorelease.com](http://www.clicktorelease.com) [http://twitter.com/thespite](@thespite)
+Jaume Sanchez [http://www.clicktorelease.com](http://www.clicktorelease.com) [@thespite](http://twitter.com/thespite)
 
-Emil Karlsson [http://twitter.com/sejnulla](@Sejnulla)
+Emil Karlsson [@Sejnulla](http://twitter.com/sejnulla)
 
 Music by Cliff Martinez
 
