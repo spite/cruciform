@@ -1,2 +1,24 @@
-# cruciform
 cru·ci·form
+======
+**study in architecture visualisation**
+
+**cru·ci·form** is my latest experiment while trying to learn 3D graphics, WebGL and three.js. [See it here in real-time](http://www.clicktorelease.com/code/cruciform) and [here's a 720p capture](https://www.youtube.com/watch?v=0izGfrk_-U4).
+
+![cru·ci·form](/assets/cruciform-cover.jpg)
+
+Credits
+-------
+
+Jaume Sanchez [http://www.clicktorelease.com](http://www.clicktorelease.com) [http://twitter.com/thespite](@thespite)
+Emil Karlsson [http://twitter.com/sejnulla](@Sejnulla)
+
+Music by Cliff Martinez
+
+License
+=======
+
+MIT licensed
+
+Copyright © 2015 Jaume Sanchez Elias
+
+http://www.clicktorelease.com
