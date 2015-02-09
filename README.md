@@ -6,6 +6,15 @@ cru·ci·form
 
 ![cru·ci·form](/assets/cruciform-cover.jpg)
 
+Requirements
+-----------
+
+Clone the repo or download the project files.
+
+[Wagner](https://github.com/spite/Wagner) is a dependency. Use bower to install it:
+
+    bower install git://github.com/spite/Wagner.git
+    
 Credits
 -------
 
