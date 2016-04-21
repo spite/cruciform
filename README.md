@@ -2,7 +2,11 @@ cru·ci·form
 ======
 **study in architecture visualisation**
 
-**cru·ci·form** is my latest experiment while trying to learn 3D graphics, WebGL and three.js. [See it here in real-time](http://www.clicktorelease.com/code/cruciform) and [here's a 720p capture](https://www.youtube.com/watch?v=0izGfrk_-U4).
+**cru·ci·form** is my latest experiment while trying to learn 3D graphics, WebGL and three.js. 
+
+- [See it here in real-time](http://www.clicktorelease.com/code/cruciform)
+- [here's a 720p 30FPS capture](https://www.youtube.com/watch?v=0izGfrk_-U4)
+- [here's a 4K 3840x2160 60FPS capture](https://www.youtube.com/watch?v=rly322ijJWA)
 
 ![cru·ci·form](/assets/cruciform-cover.jpg)
 
