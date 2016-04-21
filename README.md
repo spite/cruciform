@@ -5,8 +5,9 @@ cru·ci·form
 **cru·ci·form** is my latest experiment while trying to learn 3D graphics, WebGL and three.js. 
 
 - [See it here in real-time](http://www.clicktorelease.com/code/cruciform)
-- [here's a 720p 30FPS capture](https://www.youtube.com/watch?v=0izGfrk_-U4)
-- [here's a 4K 3840x2160 60FPS capture](https://www.youtube.com/watch?v=rly322ijJWA)
+- [Here's a 720p 30FPS capture](https://www.youtube.com/watch?v=0izGfrk_-U4)
+- [Here's a 4K 3840x2160 60FPS capture](https://www.youtube.com/watch?v=rly322ijJWA)
+- Read a bit more in the [making of cru·ci·form](https://www.clicktorelease.com/blog/making-of-cruciform)
 
 ![cru·ci·form](/assets/cruciform-cover.jpg)
 
