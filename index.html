@@ -436,7 +436,6 @@ void main()  {
 		var aspectRatio = window.innerWidth / window.innerHeight;
 		camera = new THREE.PerspectiveCamera( 45, aspectRatio, .01, 30 );
 		camera.target = new THREE.Vector3();
-		camera.position.set( 8.48048079936136, -2.086495492733194, 0.3702657880176793 );
 
 		if( manual ) {
 			controls = new THREE.OrbitControls( camera );
@@ -608,6 +607,10 @@ void main()  {
 			sphere.scale.set( .25 * scale, .25 * scale, .25 * scale );
 
 			progressIndicator( 95 );
+
+			camera.position.set( 8.48048079936136, -2.086495492733194, 0.3702657880176793 );
+			camera.position.multiplyScalar( scale );
+			camera.lookAt( sphere.position );
 
 			ready();
 		}
