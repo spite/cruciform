@@ -106,9 +106,9 @@
 <script src="js/OBJLoader.js"></script>
 <script src="js/OrbitControls.js"></script>
 <script src="js/ImprovedNoise.js"></script>
-<script src="Wagner/Wagner.js"></script>
-<script src="Wagner/Wagner.base.js"></script>
-<script src="Wagner/ShaderLoader.js"></script>
+<script src="bower_components/Wagner/Wagner.js"></script>
+<script src="bower_components/Wagner/Wagner.base.js"></script>
+<script src="bower_components/Wagner/ShaderLoader.js"></script>
 <script src="js/timeline.js"></script>
 <script src="js/storyboard.js"></script>
 
@@ -317,9 +317,9 @@ void main()  {
 
 	'use strict'
 
-	WAGNER.vertexShadersPath = 'Wagner/vertex-shaders';
-	WAGNER.fragmentShadersPath = 'Wagner/fragment-shaders';
-	WAGNER.assetsPath = 'Wagner/assets/';
+	WAGNER.vertexShadersPath = 'bower_components/Wagner/vertex-shaders';
+	WAGNER.fragmentShadersPath = 'bower_components/Wagner/fragment-shaders';
+	WAGNER.assetsPath = 'bower_components/Wagner/assets/';
 
 	var audio = new Audio();
 
@@ -484,8 +484,8 @@ void main()  {
 		window.addEventListener( 'resize', onWindowResize );
 
 		var sL = new ShaderLoader()
-		sL.add( 'depth-vs', 'Wagner/vertex-shaders/packed-depth-vs.glsl' );
-		sL.add( 'depth-fs', 'Wagner/fragment-shaders/packed-depth-fs.glsl' );
+		sL.add( 'depth-vs', 'bower_components/Wagner/vertex-shaders/packed-depth-vs.glsl' );
+		sL.add( 'depth-fs', 'bower_components/Wagner/fragment-shaders/packed-depth-fs.glsl' );
 		sL.load();
 		sL.onLoaded( function() {
 			depthMaterial = new THREE.ShaderMaterial( {
@@ -555,7 +555,7 @@ void main()  {
 				var t = e.geometry.boundingBox.max.clone();
 				t.sub( e.geometry.boundingBox.min );
 				scale = height / t.y;
-				console.log( height, t.y, scale );			
+				
 				e.scale.set( scale, scale, scale );
 				e.material = shinyMaterial;
 				t.multiply( e.scale );
