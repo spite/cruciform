@@ -102,15 +102,11 @@
 
 <script src="js/three.min.js"></script>
 <script src="js/BufferGeometryUtils.js"></script>
-<!--<script src="js/DDSLoader.js"></script>-->
 <script src="js/OBJLoader.js"></script>
 <script src="js/OrbitControls.js"></script>
-<script src="js/ImprovedNoise.js"></script>
 <script src="bower_components/Wagner/Wagner.js"></script>
 <script src="bower_components/Wagner/Wagner.base.js"></script>
 <script src="bower_components/Wagner/ShaderLoader.js"></script>
-<script src="js/timeline.js"></script>
-<script src="js/storyboard.js"></script>
 <script src="js/VREffect.js"></script>
 <script src="js/VRControls.js"></script>
 
@@ -320,8 +316,6 @@ void main()  {
 	WAGNER.fragmentShadersPath = 'bower_components/Wagner/fragment-shaders';
 	WAGNER.assetsPath = 'bower_components/Wagner/assets/';
 
-	var audio = new Audio();
-
 	var composer;
 	var vignettePass, FXAAPass, bloomPass, lensPass, DOFPass, rgbSplitPass, noisePass;
 	var bokehPass, bleachPass;
@@ -374,13 +368,8 @@ void main()  {
 	credits = document.getElementById( 'credits' ),
 	tapToStart = document.getElementById( 'tapToStart' );
 
-	var iNoise = new ImprovedNoise();
-
-	var useAudio = false;
 	var intro, title, textScene, textCamera;
-	var manual = false;
-	//manual = true;
-
+	
 	var roomModel, cubeModel;
 	
 	var progressIndicator = ( function getProgressFn() {
@@ -416,16 +405,6 @@ void main()  {
 
 	}
 
-	function goInteractive() {
-
-		manual = true;
-		controls = new THREE.OrbitControls( camera );
-		sphere.visible = true;
-		sphere.scale.set( .2, .2, .2 );
-		vignettePass.params.boost = 2;
-
-	}
-
 	function init() {
 
 		document.getElementById( 'headphones' ).style.opacity = 1;
@@ -436,12 +415,7 @@ void main()  {
 		var aspectRatio = window.innerWidth / window.innerHeight;
 		camera = new THREE.PerspectiveCamera( 75, aspectRatio, .01, 30 );
 		camera.target = new THREE.Vector3();
-		camera.position.set( 8.48048079936136, -2.086495492733194, 0.3702657880176793 );
-
-		if( manual ) {
-			controls = new THREE.OrbitControls( camera );
-			controls.damping = 0.2;
-		}
+		camera.position.set( .1, 1.5, .1 );
 
 		renderer = new THREE.WebGLRenderer( { antialias: true });
 		document.body.appendChild( renderer.domElement );
@@ -645,32 +619,8 @@ void main()  {
 
 			progressIndicator( 100 );
 
-			function startAudio() {
-
-				tapToStart.removeEventListener( 'click', startAudio );
-				tapToStart.classList.add( 'hidden' );
-
-				audio.addEventListener( 'canplay', function() {
-					startTime = Date.now();
-					if( !manual ) audio.play();
-					startRendering();
-				} )
-				if( !useAudio ) audio.volume = 0;
-				audio.preload = 'auto';
-				audio.autoplay = false;
-				audio.src = 'assets/track.mp3';
-				audio.play();
-
-			}
-
-			if( isMobile ) {
-				tapToStart.classList.remove( 'hidden' );
-				tapToStart.addEventListener( 'click', startAudio );
-			} else {
-				//startAudio();
-				startTime = Date.now();
-				startRendering();
-			}
+			startTime = Date.now();
+			startRendering();
 
 			document.getElementById( 'progress' ).style.opacity = 0;
 
@@ -681,18 +631,6 @@ void main()  {
 		}
 
 		function startRendering() {
-
-			( function attachInteractiveModeTrigger() {
-				var count = 0;
-				document.body.addEventListener( 'click', function() {
-					count++;
-					if( count == 3 ) goInteractive();
-				} );
-				document.body.addEventListener( 'touchend', function() {
-					count++;
-					if( count == 3 ) goInteractive();
-				} );
-			} )();
 
 			document.getElementById( 'headphones' ).style.opacity = 0;
 			setTimeout( render, 1000 );
@@ -730,47 +668,6 @@ void main()  {
 
 	}
 
-	function updateStory( t ) {
-
-		camera.position.x = averageData( storyline, t, 'x' );
-		camera.position.y = averageData( storyline, t, 'y' );
-		camera.position.z = averageData( storyline, t, 'z' );
-
-		camera.target.x = averageData( storyline, t, 'targetx' );
-		camera.target.y = averageData( storyline, t, 'targety' );
-		camera.target.z = averageData( storyline, t, 'targetz' );
-
-		camera.lookAt( camera.target );
-
-		//vignettePass.params.reduction = 3 + ( 10 - 10 * averageData( storyline, t, 'fade' ) );
-		vignettePass.params.boost = 2 * averageData( storyline, t, 'fade' );
-		vignettePass.params.boost += .2 * iNoise.noise( t, .234234, .565 );
-
-		var s = .2 * averageData( storyline, t, 'sphere' );
-		sphere.scale.set( s, s, s );
-		sphere.visible = s > .001;
-
-		sphere.position.x = averageData( storyline, t, 'orbx' );
-
-		sphere.rotation.y = averageData( storyline, t, 'sphereAngle' );
-
-		intro.style.opacity = averageData( storyline, t, 'text' );
-		credits.style.opacity = averageData( storyline, t, 'credits' );
-
-		var fov = averageData( storyline, t, 'fov' );
-		if( fov != camera.fov ) {
-			camera.fov = fov;
-			camera.updateProjectionMatrix();
-		}
-
-		DOFPass.params.aperture = averageData( storyline, t, 'aperture' );
-		DOFPass.params.autofocus = averageData( storyline, t, 'autofocus' );
-		DOFPass.params.fD = averageData( storyline, t, 'focalDistance' );
-
-		if( t > 120 ) credits.style.pointerEvents = 'auto';
-
-	}
-
 	function render() {
 
 		sphere.rotation.y += .01;
@@ -781,12 +678,6 @@ void main()  {
 		requestAnimationFrame(render);
 
 		return;
-
-		if( !manual ){
-			var t = .001 * ( Date.now() - startTime );
-			if( useAudio ) t = audio.currentTime;
-			updateStory( t );
-		}
 
 		if( hashOptions.post == false ) {
 			renderer.setClearColor( 0xffffff );
@@ -857,4 +748,3 @@ void main()  {
 </script>
 </body>
 </html>
-<script src="//cdn.webglstats.com/stat.js" defer="defer" async="async"></script>
