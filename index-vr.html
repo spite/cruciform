@@ -449,7 +449,7 @@ void main()  {
 		if( hashOptions.scale != undefined ) pixelRatioScale = hashOptions.scale?.5:1;
 		renderer.setPixelRatio( pixelRatioScale * window.devicePixelRatio );
 		renderer.setClearColor( 0xffffff );
-		renderer.autoClear = false;
+		//renderer.autoClear = false;
 		var textureLOD = null;//renderer.context.getExtension( 'EXT_shader_texture_lod' );
 
 		effect = new THREE.VREffect( renderer );
