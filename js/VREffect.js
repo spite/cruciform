@@ -103,7 +103,8 @@ THREE.VREffect = function ( renderer, onError ) {
 	document.addEventListener( fullscreenchange, function () {
 
 		isPresenting = isDeprecatedAPI && vrHMD && ( document.mozFullScreenElement || document.webkitFullscreenElement ) !== undefined;
-
+		isPresenting = true
+		
 		if ( isPresenting ) {
 
 			rendererPixelRatio = renderer.getPixelRatio();
@@ -125,6 +126,7 @@ THREE.VREffect = function ( renderer, onError ) {
 	window.addEventListener( 'vrdisplaypresentchange', function () {
 
 		isPresenting = vrHMD && vrHMD.isPresenting;
+		isPresenting = true
 
 		if ( isPresenting ) {
 
