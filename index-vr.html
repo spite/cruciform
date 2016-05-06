@@ -109,6 +109,8 @@
 <script src="bower_components/Wagner/ShaderLoader.js"></script>
 <script src="js/VREffect.js"></script>
 <script src="js/VRControls.js"></script>
+<script src="js/webvr-polyfill.js"></script>
+<script src="js/webvr-manager.js"></script>
 
 <script type="x-shader/x-vertex" id="vertexShader">
 
@@ -316,53 +318,16 @@ void main()  {
 	WAGNER.fragmentShadersPath = 'bower_components/Wagner/fragment-shaders';
 	WAGNER.assetsPath = 'bower_components/Wagner/assets/';
 
-	var composer;
-	var vignettePass, FXAAPass, bloomPass, lensPass, DOFPass, rgbSplitPass, noisePass;
-	var bokehPass, bleachPass;
-
-	var effect, controls;
+	var effect, controls, manager;
 
 	var scene, camera, controls, renderer, cubeCamera, cubeMapGenerated = false;
 	var sphere;
-
-	var depthMaterial = new THREE.MeshBasicMaterial();
-
-	var dof = true, bloom = true, fxaa = true, vignette = true, bleach = true, 
-		lens = false, rgbSplit = true, bokeh = false, noise = true;
 
 	var startTime = Date.now();
 	var tmpVector = new THREE.Vector3();
 	var raycaster = new THREE.Raycaster();
 	var centerVector = new THREE.Vector2( 0, 0 );
-	var depthTexture = null;
 	var baseMaterial, shinyMaterial;
-
-	WAGNER.BokehPoisonPass = function() {
-
-		WAGNER.Pass.call( this );
-		WAGNER.log( 'BokehPoison Pass constructor' );
-		this.loadShader( 'bokeh-poison-dof-fs.glsl' );
-
-		this.params.amount = 10;
-		this.params.radius = 1;
-		this.params.tBias = null
-		this.params.focalDistance = 1;
-		this.params.aperture = 1;
-
-	};
-
-	WAGNER.BokehPoisonPass.prototype = Object.create( WAGNER.Pass.prototype );
-
-	WAGNER.BokehPoisonPass.prototype.run = function( c ) {
-
-		this.shader.uniforms.amount.value = this.params.amount;
-		this.shader.uniforms.radius.value = this.params.radius;
-		this.shader.uniforms.focalDistance.value = this.params.focalDistance;
-		this.shader.uniforms.aperture.value = this.params.aperture;
-		this.shader.uniforms.tBias.value = this.params.tBias;
-		c.pass( this.shader );
-
-	};
 
 	var intro = document.getElementById( 'intro' ),
 	credits = document.getElementById( 'credits' ),
@@ -409,8 +374,6 @@ void main()  {
 
 		document.getElementById( 'headphones' ).style.opacity = 1;
 
-		if( hashOptions.dof != undefined ) dof = hashOptions.dof;
-
 		scene = new THREE.Scene();
 		var aspectRatio = window.innerWidth / window.innerHeight;
 		camera = new THREE.PerspectiveCamera( 75, aspectRatio, .01, 30 );
@@ -431,52 +394,21 @@ void main()  {
 		controls.standing = true;
 		effect.setSize( window.innerWidth, window.innerHeight );
 		
+		var params = {
+			hideButton: false, // Default: false.
+			isUndistorted: false // Default: false.
+		};
+		manager = new WebVRManager(renderer, effect, params);
+
 		var fragmentPrefix = '';
 		if( textureLOD ) fragmentPrefix = '#define TEXTURELOD';
-
-		composer = new WAGNER.Composer( renderer, { useRGBA: false } );
-		vignettePass = new WAGNER.Vignette2Pass();
-		vignettePass.params.reduction = 2;
-		FXAAPass = new WAGNER.FXAAPass();
-		var bufferSize = isMobile?256:512;
-		bloomPass = new WAGNER.MultiPassBloomPass( bufferSize, bufferSize );
-		bloomPass.params.blurAmount = isMobile?.5:1;
-		DOFPass = new WAGNER.DOFPass();
-		//DOFPass = new WAGNER.BokehPoisonPass();
-		noisePass = new WAGNER.NoisePass();
-
-		noisePass.params.amount = .01;
-		
-		rgbSplitPass = new WAGNER.RGBSplitPass();
-		rgbSplitPass.params.delta.set( pixelRatioScale * 20, pixelRatioScale * 20 );
-
-		bokehPass = new WAGNER.BokehPoisonPass();
-
-		bleachPass = new WAGNER.BleachPass();
-
-		DOFPass.params.aperture = .01;
 
 		cubeCamera = new THREE.CubeCamera( .00000001, 10, 1024 ); // parameters: near, far, resolution
 		cubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter; // mipmap filter
 		scene.add( cubeCamera );
 
 		window.addEventListener( 'resize', onWindowResize );
-
-		var sL = new ShaderLoader()
-		sL.add( 'depth-vs', 'bower_components/Wagner/vertex-shaders/packed-depth-vs.glsl' );
-		sL.add( 'depth-fs', 'bower_components/Wagner/fragment-shaders/packed-depth-fs.glsl' );
-		sL.load();
-		sL.onLoaded( function() {
-			depthMaterial = new THREE.ShaderMaterial( {
-				uniforms: {
-					mNear: { type: 'f', value: camera.near },
-					mFar: { type: 'f', value: camera.far }
-				},
-				vertexShader: this.get( 'depth-vs' ),
-				fragmentShader: this.get( 'depth-fs' ),
-				shading: THREE.SmoothShading
-			} );
-		} );
+		window.addEventListener('vrdisplaypresentchange', onWindowResize, true);
 
 		var diffuseTexture, normalTexture, specularTexture, displacementTexture;
 		var diffuseOrbTexture, normalOrbTexture, specularOrbTexture, lightOrbTexture;
@@ -487,6 +419,14 @@ void main()  {
 
 			scene.add( roomModel );
 			
+			diffuseTexture.anisotropy = 
+			specularTexture.anisotropy = 
+			normalTexture.anisotropy = 
+			displacementTexture.anisotropy = 
+			cubeCamera.renderTarget.anisotropy = 
+			normalOrbTexture.anisotropy = 
+			renderer.getMaxAnisotropy();
+
 			shinyMaterial = new THREE.ShaderMaterial( {
 				uniforms: {
 					bumpiness: { type: 'f', value: 1 },
@@ -624,9 +564,9 @@ void main()  {
 
 			document.getElementById( 'progress' ).style.opacity = 0;
 
-			document.body.addEventListener( 'click', function() {
+			/*document.body.addEventListener( 'click', function() {
 				effect.setFullScreen( true );
-			});
+			});*/
 
 		}
 
@@ -668,65 +608,14 @@ void main()  {
 
 	}
 
-	function render() {
+	function render( timestamp ) {
 
 		sphere.rotation.y += .01;
 
 		controls.update();
-		effect.render( scene, camera );
+		manager.render( scene, camera, timestamp );
 
 		requestAnimationFrame(render);
-
-		return;
-
-		if( hashOptions.post == false ) {
-			renderer.setClearColor( 0xffffff );
-			renderer.render( scene, camera );
-			return;
-		}
-
-		composer.reset();
-
-		if( ( dof && DOFPass.params.aperture > 0 ) || bokeh ) {
-			scene.overrideMaterial = depthMaterial;
-			composer.render( scene, camera, null, depthTexture );
-			DOFPass.params.tBias = depthTexture;
-			bokehPass.params.tBias = depthTexture;
-
-			scene.overrideMaterial = null;
-			composer.render( scene, camera );
-		} else {
-			composer.render( scene, camera );
-		}
-
-		if( vignette ) composer.pass( vignettePass );
-		
-		if( rgbSplit ) composer.pass( rgbSplitPass );
-
-		if( ( dof && DOFPass.params.aperture > 0 ) ) {
-			if( DOFPass.params.autofocus ) {
-				raycaster.setFromCamera( centerVector, camera );
-				var intersects = raycaster.intersectObjects( [ sphere, roomModel ], true );
-				if( intersects.length ) {
-					DOFPass.params.focalDistance = 1 - intersects[ 0 ].distance / ( camera.far - camera.near );
-				}
-			} else {
-				DOFPass.params.focalDistance = DOFPass.params.fD;
-			}
-			composer.pass( DOFPass );
-		}
-
-		if( bloom ) composer.pass( bloomPass );
-
-		if( fxaa ) composer.pass( FXAAPass );
-
-		if( bokeh ) composer.pass( bokehPass );
-
-		if( bleach ) composer.pass( bleachPass );
-
-		if( noise ) composer.pass( noisePass );
-
-		composer.toScreen();
 
 	}
 
@@ -735,9 +624,6 @@ void main()  {
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
-
-		composer.setSize( renderer.domElement.width, renderer.domElement.height );
-		depthTexture = WAGNER.Pass.prototype.getOfflineTexture( composer.width, composer.height, false );
 
 		effect.setSize( window.innerWidth, window.innerHeight );
 		
