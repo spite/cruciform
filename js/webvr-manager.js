@@ -70,7 +70,7 @@ ButtonManager.prototype.createButton = function() {
   s.padding = '12px';
   s.zIndex = 1;
   s.display = 'none';
-  s.boxSizing = 'content-box'
+  s.boxSizing = 'content-box';
 
   // Prevent button from being selected and dragged.
   button.draggable = false;
