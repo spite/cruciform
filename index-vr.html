@@ -101,6 +101,7 @@
 	</div>
 
 <script src="js/three.min.js"></script>
+<script src="js/MarchingCubes.js"></script>
 <script src="js/BufferGeometryUtils.js"></script>
 <script src="js/OBJLoader.js"></script>
 <script src="js/OrbitControls.js"></script>
@@ -120,6 +121,7 @@ varying mat3 tbnMatrix;
 varying vec2 vUv;
 uniform vec2 repeatUV;
 uniform float bumpiness;
+uniform mat3 rotMatrix;
 
 mat3 m3( mat4 mIn ) {
 
@@ -310,6 +312,143 @@ void main()  {
 
 </script>
 
+<script type="x-shader/x-vertex" id="mb-vs">
+
+	varying vec3 vNormal;
+    varying vec4 vPosition;
+    varying vec4 vOPosition;
+	varying vec3 vONormal;
+    varying vec3 vU;
+    varying vec3 vEye;
+    varying vec3 pos;
+    varying vec3 view;
+
+ mat3 m3( mat4 mIn ) {
+
+	mat3 mOut;
+
+	mOut[ 0 ][ 0 ] = mIn[ 0 ][ 0 ]; 
+	mOut[ 0 ][ 1 ] = mIn[ 0 ][ 1 ]; 
+	mOut[ 0 ][ 2 ] = mIn[ 0 ][ 2 ]; 
+
+	mOut[ 1 ][ 0 ] = mIn[ 1 ][ 0 ]; 
+	mOut[ 1 ][ 1 ] = mIn[ 1 ][ 1 ]; 
+	mOut[ 1 ][ 2 ] = mIn[ 1 ][ 2 ]; 
+
+	mOut[ 2 ][ 0 ] = mIn[ 2 ][ 0 ]; 
+	mOut[ 2 ][ 1 ] = mIn[ 2 ][ 1 ]; 
+	mOut[ 2 ][ 2 ] = mIn[ 2 ][ 2 ]; 
+
+	return mOut;
+}
+
+    void main() {
+
+        vOPosition = modelViewMatrix * vec4( position, 1.0 );
+        gl_Position = projectionMatrix * vOPosition;
+
+        vU = normalize( vec3( modelViewMatrix * vec4( position, 1.0 ) ) );
+
+        vPosition = vec4( position, 1.0 );
+        vNormal = normalMatrix * normal;
+        vONormal = normal;
+
+        pos = vec3(modelMatrix * vec4( position, 1. ) );
+		view = pos - cameraPosition;  
+
+    }
+
+</script>
+
+<script type="x-shader/x-vertex" id="mb-fs">
+	
+	uniform sampler2D textureMap;
+    uniform sampler2D normalMap;
+    uniform float normalScale;
+    uniform float texScale;
+   
+    uniform samplerCube envMap;
+    uniform float roughness;
+
+    uniform vec3 cubeMapSize;
+	const vec3 cubeMapPos = vec3( 0, 2., 0 ); 
+
+    varying vec3 vNormal;
+    varying vec4 vPosition;
+    varying vec4 vOPosition;
+	varying vec3 vONormal;
+	varying vec3 vU;
+    varying vec3 vEye;
+    varying vec3 pos;
+    varying vec3 view;
+
+	float random(vec3 scale,float seed){return fract(sin(dot(gl_FragCoord.xyz+seed,scale))*43758.5453+seed);}
+
+	vec3 parallaxCorrectNormal( vec3 v, vec3 cubeSize, vec3 cubePos ) {
+
+		vec3 nDir = normalize(v);
+		vec3 rbmax = (   .5 * cubeSize - pos + cubePos ) / nDir;
+		vec3 rbmin = ( - .5 * cubeSize - pos + cubePos ) / nDir;
+
+		vec3 rbminmax;
+		rbminmax.x = ( nDir.x > 0. )?rbmax.x:rbmin.x;
+		rbminmax.y = ( nDir.y > 0. )?rbmax.y:rbmin.y;
+		rbminmax.z = ( nDir.z > 0. )?rbmax.z:rbmin.z;
+
+		float correction = min(min(rbminmax.x, rbminmax.y), rbminmax.z);
+		vec3 boxIntersection = pos + nDir * correction;
+
+		return boxIntersection - cubePos;
+	}
+
+    void main() {
+
+        vec3 n = normalize( vONormal.xyz );
+        vec3 blend_weights = abs( n );
+        blend_weights = ( blend_weights - 0.2 ) * 7.;  
+        blend_weights = max( blend_weights, 0. );
+        blend_weights /= ( blend_weights.x + blend_weights.y + blend_weights.z );
+
+        vec2 coord1 = vPosition.yz * texScale;
+        vec2 coord2 = vPosition.zx * texScale;
+        vec2 coord3 = vPosition.xy * texScale;
+
+        vec3 bump1 = texture2D( normalMap, coord1 ).rgb;  
+        vec3 bump2 = texture2D( normalMap, coord2 ).rgb;  
+        vec3 bump3 = texture2D( normalMap, coord3 ).rgb; 
+
+        vec3 blended_bump = bump1 * blend_weights.xxx +  
+                            bump2 * blend_weights.yyy +  
+                            bump3 * blend_weights.zzz;
+
+        vec3 tanX = vec3( vONormal.x, -vONormal.z, vONormal.y);
+        vec3 tanY = vec3( vONormal.z, vONormal.y, -vONormal.x);
+        vec3 tanZ = vec3(-vONormal.y, vONormal.x, vONormal.z);
+        vec3 blended_tangent = tanX * blend_weights.xxx +  
+                               tanY * blend_weights.yyy +  
+                               tanZ * blend_weights.zzz; 
+
+        vec3 normalTex = blended_bump * 2.0 - 1.0;
+        normalTex.xy *= normalScale;
+        normalTex.y *= -1.;
+        normalTex = normalize( normalTex );
+        mat3 tsb = mat3( normalize( blended_tangent ), normalize( cross( vONormal, blended_tangent ) ), normalize( vONormal ) );
+        vec3 finalNormal = tsb * normalTex;
+
+       	vec3 vVec = normalize( view );  
+       	vec3 nVec = normalize( finalNormal );
+        vec3 rVec = parallaxCorrectNormal( reflect( vVec, nVec ), cubeMapSize, cubeMapPos );
+
+		vec3 env = textureCube( envMap, rVec, roughness ).rgb;
+		float rim = 1. - abs( dot( nVec, vVec) );
+		vec3 base = ( .5 + .2 * rim ) * env;
+
+        gl_FragColor = vec4( base, 1. );
+
+}
+	
+</script>
+
 <script>
 
 	'use strict'
@@ -323,6 +462,8 @@ void main()  {
 	WAGNER.assetsPath = 'bower_components/Wagner/assets/';
 
 	var effect, controls, manager;
+	var user = new THREE.Object3D();
+	user.position.x = 1
 
 	var scene, camera, controls, renderer, cubeCamera, cubeMapGenerated = false;
 	var sphere;
@@ -340,7 +481,8 @@ void main()  {
 	var intro, title, textScene, textCamera;
 	
 	var roomModel, cubeModel;
-	
+	var metaballs;
+
 	var progressIndicator = ( function getProgressFn() {
 
 		var progress = document.getElementById( 'progress' );
@@ -353,6 +495,72 @@ void main()  {
 
 	var isMobile = 'ontouchstart' in window;
 	var hashOptions = {};
+
+	var resolution = 50, numBlobs = 10;
+
+	var showMetaballs = false;
+
+	function updateCubes( object, time, numblobs, floor, wallx, wallz ) {
+				
+		object.reset();
+			
+		// fill the field with some metaballs
+		
+		var i, ballx, bally, ballz, subtract, strength;
+		
+		subtract = 12;
+		strength = 1.2 / ( ( Math.sqrt( numblobs ) - 1 ) / 4 + 1 );
+		
+		for ( i = 0; i < numblobs; i++ ) {
+
+			ballx = Math.sin( i + 1.26 * time * ( 1.03 + 0.5 * Math.cos( 0.21 * i ) ) ) * 0.27 + 0.5;
+			bally = Math.cos( i + 1.12 * time * 0.21 * Math.sin( ( 0.72 + 0.83 * i ) ) ) * 0.27 + 0.5;
+			ballz = Math.cos( i + 1.32 * time * 0.1 * Math.sin( ( 0.92 + 0.53 * i ) ) ) * 0.27 + 0.5;
+			
+			object.addBall( ballx, bally, ballz, strength, subtract );
+			
+		}
+		
+	}
+
+	function addMetaballs() {
+
+		var material = new THREE.ShaderMaterial( {
+
+			uniforms: {
+	            textureMap: { type: 't', value: THREE.ImageUtils.loadTexture( 'assets/matcap.jpg' ) },
+	            normalMap: { type: 't', value: THREE.ImageUtils.loadTexture( 'assets/carbon-fiber.jpg' ) },
+	            normalScale: { type: 'f', value: .1 },
+	            texScale: { type: 'f', value: 20 },
+	            envMap: { type: 't', value: cubeCamera.renderTarget },
+				specular: { type: 'f', value: 0 },
+				roughness: { type: 'f', value: 2 },
+				cubeMapSize: { type: 'v3', value: new THREE.Vector3() }
+	        },
+			vertexShader: document.getElementById( 'mb-vs' ).textContent,
+			fragmentShader: document.getElementById( 'mb-fs' ).textContent,
+			side: THREE.DoubleSide
+			
+		} );
+
+		material.uniforms.textureMap.value.wrapS = material.uniforms.textureMap.value.wrapT = 
+		THREE.ClampToEdgeWrapping;
+
+		material.uniforms.normalMap.value.wrapS = material.uniforms.normalMap.value.wrapT = 
+		THREE.RepeatWrapping;
+
+		//material = new THREE.MeshNormalMaterial();
+
+		metaballs = new THREE.MarchingCubes( resolution, material, true, false );
+		//metaballs = new THREE.Mesh( new THREE.IcosahedronGeometry( .5, 3 ), material );
+		metaballs.position.y = 1;
+		scene.add( metaballs );
+
+		metaballs.visible = false;
+
+		updateCubes( metaballs, 0, numBlobs );
+
+	}
 
 	function selectQuality() {
 
@@ -382,7 +590,8 @@ void main()  {
 		var aspectRatio = window.innerWidth / window.innerHeight;
 		camera = new THREE.PerspectiveCamera( 75, aspectRatio, .01, 30 );
 		camera.target = new THREE.Vector3();
-		camera.position.set( .1, 1.5, .1 );
+		user.add( camera );
+		scene.add( user );
 
 		renderer = new THREE.WebGLRenderer( { antialias: true });
 		document.body.appendChild( renderer.domElement );
@@ -407,8 +616,8 @@ void main()  {
 		var fragmentPrefix = '';
 		if( textureLOD ) fragmentPrefix = '#define TEXTURELOD';
 
-		cubeCamera = new THREE.CubeCamera( .00000001, 10, 1024 ); // parameters: near, far, resolution
-		cubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter; // mipmap filter
+		cubeCamera = new THREE.CubeCamera( .00000001, 30, 32 ); // parameters: near, far, resolution
+		//cubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter; // mipmap filter
 		scene.add( cubeCamera );
 
 		window.addEventListener( 'resize', onWindowResize );
@@ -442,7 +651,8 @@ void main()  {
 					envMap: { type: 't', value: cubeCamera.renderTarget },
 					specular: { type: 'f', value: 0 },
 					roughness: { type: 'f', value: 2 },
-					cubeMapSize: { type: 'v3', value: new THREE.Vector3() }
+					cubeMapSize: { type: 'v3', value: new THREE.Vector3() },
+					rotMatrix: { type: 'm3', value: new THREE.Matrix3() }
 				},
 				vertexShader: document.getElementById( 'vertexShader' ).textContent,
 				fragmentShader: fragmentPrefix + document.getElementById( 'fragmentShader' ).textContent,
@@ -498,7 +708,8 @@ void main()  {
 					normalMap: { type: 't', value: normalOrbTexture },
 					detailNormalMap: { type: 't', value: displacementTexture },
 					envMap: { type: 't', value: cubeCamera.renderTarget },
-					cubeMapSize: { type: 'v3', value: new THREE.Vector3() }
+					cubeMapSize: { type: 'v3', value: new THREE.Vector3() },
+					rotMatrix: { type: 'm3', value: new THREE.Matrix3() }
 				},
 				vertexShader: document.getElementById( 'vertexShader' ).textContent,
 				fragmentShader: fragmentPrefix + document.getElementById( 'fragment2Shader' ).textContent,
@@ -524,12 +735,12 @@ void main()  {
 
 			geometry.setIndex( new THREE.BufferAttribute( new Uint16Array( indices_array ), 1 ) );
 
-			//geometry.computeFaceNormals();
-			//geometry.computeVertexNormals();
 			THREE.BufferGeometryUtils.computeTangents( geometry );
 			geometry.center();
 
 			progressIndicator( 94 );
+
+	//		var geometry = new THREE.TorusKnotGeometry( 10, 3, 200, 32 );
 
 			sphere = new THREE.Mesh( geometry, m );
 			scene.add( sphere );
@@ -537,6 +748,10 @@ void main()  {
 			sphere.position.y = 1.5;
 			scale *= .125;
 			sphere.scale.set( scale, scale, scale );
+
+			addMetaballs();
+
+			metaballs.material.uniforms.cubeMapSize.value.copy( shinyMaterial.uniforms.cubeMapSize.value )
 
 			progressIndicator( 95 );
 
@@ -547,10 +762,12 @@ void main()  {
 
 			scene.overrideMaterial = baseMaterial;
 			sphere.visible = false;
+			metaballs.visible = false;
 			cubeCamera.updateCubeMap( renderer, scene );
 			scene.overrideMaterial = null;
 			cubeMapGenerated = true;
 			sphere.visible = true;
+			metaballs.visible = true;
 
 			progressIndicator( 96 );
 
@@ -582,6 +799,9 @@ void main()  {
 		}
 
 		window.addEventListener( 'keydown', function( e ) {
+			if( e.keyCode == 77 ) {
+				showMetaballs = !showMetaballs;
+			}
 			/*if( e.keyCode == 32 ) {
 				startTime = Date.now();
 				audio.currentTime = 0;
@@ -614,9 +834,26 @@ void main()  {
 
 	function render( timestamp ) {
 
+		if( showMetaballs ) {
+			metaballs.visible = true;
+			updateCubes( metaballs, .0005 * timestamp, numBlobs );
+		} else {
+			metaballs.visible = false;
+		}
+
 		sphere.rotation.y += .01;
+		sphere.position.x = 6 * Math.cos( .0001 * timestamp );
+		sphere.position.y = 2 + 1 * Math.cos( .00011 * timestamp );
 
 		controls.update();
+
+		var viewInv = new THREE.Matrix4().getInverse( sphere.matrixWorld );
+		var e = viewInv.elements;
+		var viewRot = new THREE.Matrix3().set( e[0],e[1],e[2], e[4],e[5],e[6], e[8],e[9],e[10] ); 
+
+		roomModel.children[ 0 ].material.uniforms.rotMatrix.value.identity();
+		sphere.material.uniforms.rotMatrix.value.copy( viewRot );
+
 		manager.render( scene, camera, timestamp );
 
 		requestAnimationFrame(render);
