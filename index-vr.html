@@ -23,7 +23,6 @@
 		*{box-sizing: border-box; margin: 0; padding: 0; }
 		body{overflow:hidden; background-color: black; font-family: Raleway, sans-serif; color: white; white-space: nowrap; }
 		.rs-base{ display: none}
-		#intro{ z-index: 100; position: absolute; left: 50%; top: 50%; transform: translate3d( -50%, -50%, 0 ); -webkit-transform: translate3d( -50%, -50%, 0 ); text-align: center; opacity: 0; pointer-events: none;}
 		p{ font-weight: 100; font-size: 14px }
 		h1{ font-weight: 500; font-size: 47px;}
 		span{ margin-right: 2.5em;}
@@ -61,23 +60,7 @@
 </head>
 <body>
 
-	<div id="intro" >
-		<p>Study in architecture visualisation</p>
-		<h1>cru·ci·form</h1>
-	</div>
-
-	<div id="credits">
-		<p><a href="http://twitter.com/thespite"><b>Jaume</b> Sanchez</a> <span></span><a href="https://twitter.com/sejnulla/"><b>Emil</b> Karlsson</a></p>
-		<p>Music: <i>Sail to Europe - <b>Cliff</b> Martinez</i></p>
-	</div>
-
 	<div id="progress"></div>
-
-	<div id="tapToStart" class="hidden" ><p>Tap to start</p></div>
-
-	<div id="headphones" ></div>
-
-	<!--<div id="pointer"></div>-->
 
 	<div id="selection">
 		<div class="bkg" ></div>
@@ -473,12 +456,6 @@ void main()  {
 	var raycaster = new THREE.Raycaster();
 	var centerVector = new THREE.Vector2( 0, 0 );
 	var baseMaterial, shinyMaterial;
-
-	var intro = document.getElementById( 'intro' ),
-	credits = document.getElementById( 'credits' ),
-	tapToStart = document.getElementById( 'tapToStart' );
-
-	var intro, title, textScene, textCamera;
 	
 	var roomModel, cubeModel;
 	var metaballs;
@@ -583,8 +560,6 @@ void main()  {
 	}
 
 	function init() {
-
-		document.getElementById( 'headphones' ).style.opacity = 1;
 
 		scene = new THREE.Scene();
 		var aspectRatio = window.innerWidth / window.innerHeight;
@@ -794,7 +769,6 @@ void main()  {
 
 		function startRendering() {
 
-			document.getElementById( 'headphones' ).style.opacity = 0;
 			setTimeout( render, 1000 );
 
 		}
