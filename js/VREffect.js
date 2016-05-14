@@ -26,14 +26,14 @@ THREE.VREffect = function ( renderer, onError, onReady ) {
 
 				vrHMD = devices[ i ];
 				isDeprecatedAPI = false;
-				onReady( vrHMD )
+				if( onReady) onReady( vrHMD )
 				break; // We keep the first we encounter
 
 			} else if ( 'HMDVRDevice' in window && devices[ i ] instanceof HMDVRDevice ) {
 
 				vrHMD = devices[ i ];
 				isDeprecatedAPI = true;
-				onReady( vrHMD )
+				if( onReady) onReady( vrHMD )
 				break; // We keep the first we encounter
 
 			}
