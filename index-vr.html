@@ -454,7 +454,7 @@ void main()  {
 	'use strict'
 
 	WebVRConfig = {
-		BUFFER_SCALE: 0.5,
+		//BUFFER_SCALE: 0.5,
 	};
 
 	WAGNER.vertexShadersPath = 'bower_components/Wagner/vertex-shaders';
@@ -608,6 +608,7 @@ void main()  {
 		effect.setSize( window.innerWidth, window.innerHeight );
 		
 		var params = {
+			FORCE_ENABLE_VR: true,
 			hideButton: false, // Default: false.
 			isUndistorted: false // Default: false.
 		};
