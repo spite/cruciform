@@ -26,26 +26,21 @@
 		p{ font-weight: 100; font-size: 14px }
 		h1{ font-weight: 500; font-size: 47px;}
 		span{ margin-right: 2.5em;}
-		#credits{ z-index: 100; position: absolute; left: 50%; top: 50%; transform: translate3d( -50%, 50px, 0 );-webkit-transform: translate3d( -50%, 50px, 0 ); text-align: center; opacity: 1; line-height: 2em; opacity: 0; pointer-events: none; }
-		a{ color: inherit; text-decoration: none;}
-		a:hover{ text-decoration: underline;}
-		#credits p{ font-size: 14px; }
+		a{ color: inherit; text-decoration: none; padding-bottom: .2em; border-bottom: .1em solid rgba(255,255,255,.5); font-weight: bold;}
+		a:hover{ border-color: white}
 		#progress{ position: absolute; left: 0; top: 50%; margin-top: -1px; height: 2px; background-color: white; transition: opacity 500ms ease-out; will-change: opacity; }
-		#tapToStart{ position: absolute; left: 0; right: 0; top: 0; bottom: 0; width: 100%; height: 100%; transition: opacity 500ms ease-out; will-change: pointer-events: auto;}
 		.hidden{ opacity: 0; pointer-events: none;}
-		#tapToStart p{ position: absolute; left: 0; right: 0; top: 50%; margin-top: -2em; text-align: center; }
-		#headphones{ position: absolute; left: 50%; top: 25%; margin-left: -5vh; margin-top: -5vh; width: 10vh; height: 10vh; opacity: 0; background: url( assets/headphones.svg ); background-size: cover; transition: opacity 500ms ease-out; will-change: opacity; }
-		#pointer{ position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; margin-left: -16px; margin-top: -16px; border: 1px solid #ff00ff;}
-
+	
 		#selection{ z-index: 200;position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: auto; white-space: normal; transition: opacity 500ms ease-out;}
 		.bkg{ position: fixed; background-image: url( assets/bkg.jpg ); background-size: cover; background-repeat: no-repeat; background-position: 50% 50%;  opacity: .3; left: 0; top: 0; right: 0; width: 100%; height: 100%; }
 		#block { position: absolute; left: 50%; top: 50px; width: 600px; margin-left: -300px; }
 		#block p{ font-weight: 100;  margin-bottom: 10px; line-height: 1.4em; }
-		#block h1{ font-weight: 500; font-size: 45px; margin-bottom: 20px;}
+		#block h1{ font-weight: 500; font-size: 45px; margin-bottom: 0px;}
 		#block ul{ margin-left: 0; list-style-type: none; margin-top: 1em; margin-bottom: 2em;}
 		#block li{ margin-bottom: .5em; cursor: pointer; color: #aaa;}
 		#block li:hover{ color: white;}
 		#block li b{ width: 10em; display: inline-block;}
+		#startBtn{ display: inline-block; font-size: 30px; margin: 20px 0; }
 
 		@media only screen and (max-width : 690px) {
 			#block{ width: 90%; margin-left: -45%;}
@@ -54,7 +49,6 @@
 			#block li span{display: block;}
 			#block li span:nth-child(2){ margin-left: .6em;}
 		}
-		
 
 	</style>
 </head>
@@ -65,21 +59,14 @@
 	<div id="selection">
 		<div class="bkg" ></div>
 		<div id="block">
-			<h1>cru·ci·form</h1>
-			<p>Please select a quality preset to play.</p>
-			<p><i>It's difficult to choose an option for you, since it would be a blind guess: there's just too many devices out there and very little real info we can use in JavaScript.</i></p>
-			<p>On mobile or tablet, try LOW or NORMAL.<br/>
-			On desktop, try NORMAL or HIGH.<br/>
-			If your selection doesn't perform well, try LOW or VERY LOW.</p>
-			<p><b>Note:</b> by popular demand, you can go into <b>interactive mode</b> by tapping/clicking <b>three times</b>.</p>
-			<ul>
-				<li data-url="dof=false&post=false"><span>- <b>Very low quality</b></span> <span>No postprocessing.</li>
-				<li data-url="dof=false&post=true&scale=true"><span>- <b>Low quality</b></span> <span>Postprocessing without DOF, half-resolution</span></li>
-				<li data-url="dof=true&post=true&scale=true"><span>- <b>Normal quality</b></span> <span>Full postprocessing, half-resolution</span></li>
-				<li data-url="dof=true&post=true&scale=false"><span>- <b>High quality</b></span> <span>Full postprocessing, full-resolution</span></li>
-			</ul>
-			<p>Read more about the project: <a href="http://www.clicktorelease.com/blog/making-of-cruciform" ><b>Making of</b></a>.</p>
-			<p>Enjoy!<br/><i><a href="http://twitter.com/thespite">@thespite</a> + <a href="https://twitter.com/sejnulla/">@sejnulla</a></i></p>
+			<h1>cru·ci·form WebVR</h1>
+			<p>Made using <a href="https://www.khronos.org/webgl/" rel="external">WebGL</a> with <a href="http://threejs.org/" rel="external" >three.js</a>, and <a href="http://webvr.info/" rel="external" >WebVR</a> with <a href="https://github.com/borismus/webvr-boilerplate" rel="external" >WebVR Boilerplate</a>.</p>
+			<p>Available for Google Cardboard, Oculus Rift and HTC Vive.</p>
+
+			<p><a href="#" id="startBtn">Start</a></p>
+
+			<p>Read more about the project: <a href="http://www.clicktorelease.com/blog/making-of-cruciform" rel="external">Making of</a>.</p>
+			<p>Enjoy! <i><a href="http://twitter.com/thespite" rel="external">@thespite</a> + <a href="https://twitter.com/sejnulla/" rel="external">@sejnulla</a></i></p>
 		</div>
 	</div>
 
@@ -88,9 +75,6 @@
 <script src="js/BufferGeometryUtils.js"></script>
 <script src="js/OBJLoader.js"></script>
 <script src="js/OrbitControls.js"></script>
-<script src="bower_components/Wagner/Wagner.js"></script>
-<script src="bower_components/Wagner/Wagner.base.js"></script>
-<script src="bower_components/Wagner/ShaderLoader.js"></script>
 <script src="js/VREffect.js"></script>
 <script src="js/VRControls.js"></script>
 <script src="js/webvr-polyfill.js"></script>
@@ -434,418 +418,399 @@ void main()  {
 
 <script>
 
-	'use strict'
+'use strict'
 
-	WebVRConfig = {
-		//BUFFER_SCALE: 0.5,
+var links = document.querySelectorAll( 'a[rel=external]' );
+for( var j = 0; j < links.length; j++ ) {
+	var a = links[ j ];
+	a.addEventListener( 'click', function( e ) {
+		window.open( this.href, '_blank' );
+		e.preventDefault();
+	}, false );
+}
+
+WebVRConfig = {
+	//BUFFER_SCALE: 0.5,
+};
+
+var effect, controls, manager;
+var user = new THREE.Object3D();
+user.position.x = 1
+
+var scene, camera, controls, renderer, cubeCamera, cubeMapGenerated = false;
+var sphere;
+
+var startTime = Date.now();
+var tmpVector = new THREE.Vector3();
+var raycaster = new THREE.Raycaster();
+var centerVector = new THREE.Vector2( 0, 0 );
+var baseMaterial, shinyMaterial;
+
+var roomModel, cubeModel;
+var metaballs;
+
+var progressIndicator = ( function getProgressFn() {
+
+	var progress = document.getElementById( 'progress' );
+	return function( p ) {
+
+		progress.style.width = p + '%';
 	};
 
-	WAGNER.vertexShadersPath = 'bower_components/Wagner/vertex-shaders';
-	WAGNER.fragmentShadersPath = 'bower_components/Wagner/fragment-shaders';
-	WAGNER.assetsPath = 'bower_components/Wagner/assets/';
+} )();
 
-	var effect, controls, manager;
-	var user = new THREE.Object3D();
-	user.position.x = 1
+var isMobile = 'ontouchstart' in window;
+var hashOptions = {};
 
-	var scene, camera, controls, renderer, cubeCamera, cubeMapGenerated = false;
-	var sphere;
+var resolution = 50, numBlobs = 10;
 
-	var startTime = Date.now();
-	var tmpVector = new THREE.Vector3();
-	var raycaster = new THREE.Raycaster();
-	var centerVector = new THREE.Vector2( 0, 0 );
-	var baseMaterial, shinyMaterial;
+var showMetaballs = false;
+
+function updateCubes( object, time, numblobs, floor, wallx, wallz ) {
+			
+	object.reset();
+		
+	// fill the field with some metaballs
 	
-	var roomModel, cubeModel;
-	var metaballs;
+	var i, ballx, bally, ballz, subtract, strength;
+	
+	subtract = 12;
+	strength = 1.2 / ( ( Math.sqrt( numblobs ) - 1 ) / 4 + 1 );
+	
+	for ( i = 0; i < numblobs; i++ ) {
 
-	var progressIndicator = ( function getProgressFn() {
-
-		var progress = document.getElementById( 'progress' );
-		return function( p ) {
-
-			progress.style.width = p + '%';
-		};
-
-	} )();
-
-	var isMobile = 'ontouchstart' in window;
-	var hashOptions = {};
-
-	var resolution = 50, numBlobs = 10;
-
-	var showMetaballs = false;
-
-	function updateCubes( object, time, numblobs, floor, wallx, wallz ) {
-				
-		object.reset();
-			
-		// fill the field with some metaballs
+		ballx = Math.sin( i + 1.26 * time * ( 1.03 + 0.5 * Math.cos( 0.21 * i ) ) ) * 0.27 + 0.5;
+		bally = Math.cos( i + 1.12 * time * 0.21 * Math.sin( ( 0.72 + 0.83 * i ) ) ) * 0.27 + 0.5;
+		ballz = Math.cos( i + 1.32 * time * 0.1 * Math.sin( ( 0.92 + 0.53 * i ) ) ) * 0.27 + 0.5;
 		
-		var i, ballx, bally, ballz, subtract, strength;
-		
-		subtract = 12;
-		strength = 1.2 / ( ( Math.sqrt( numblobs ) - 1 ) / 4 + 1 );
-		
-		for ( i = 0; i < numblobs; i++ ) {
-
-			ballx = Math.sin( i + 1.26 * time * ( 1.03 + 0.5 * Math.cos( 0.21 * i ) ) ) * 0.27 + 0.5;
-			bally = Math.cos( i + 1.12 * time * 0.21 * Math.sin( ( 0.72 + 0.83 * i ) ) ) * 0.27 + 0.5;
-			ballz = Math.cos( i + 1.32 * time * 0.1 * Math.sin( ( 0.92 + 0.53 * i ) ) ) * 0.27 + 0.5;
-			
-			object.addBall( ballx, bally, ballz, strength, subtract );
-			
-		}
+		object.addBall( ballx, bally, ballz, strength, subtract );
 		
 	}
+	
+}
 
-	function addMetaballs() {
+function addMetaballs() {
 
-		var material = new THREE.ShaderMaterial( {
+	var material = new THREE.ShaderMaterial( {
 
+		uniforms: {
+            textureMap: { type: 't', value: THREE.ImageUtils.loadTexture( 'assets/matcap.jpg' ) },
+            normalMap: { type: 't', value: THREE.ImageUtils.loadTexture( 'assets/carbon-fiber.jpg' ) },
+            normalScale: { type: 'f', value: .1 },
+            texScale: { type: 'f', value: 20 },
+            envMap: { type: 't', value: cubeCamera.renderTarget },
+			specular: { type: 'f', value: 0 },
+			roughness: { type: 'f', value: 2 },
+			cubeMapSize: { type: 'v3', value: new THREE.Vector3() }
+        },
+		vertexShader: document.getElementById( 'mb-vs' ).textContent,
+		fragmentShader: document.getElementById( 'mb-fs' ).textContent,
+		side: THREE.DoubleSide
+		
+	} );
+
+	material.uniforms.textureMap.value.wrapS = material.uniforms.textureMap.value.wrapT = 
+	THREE.ClampToEdgeWrapping;
+
+	material.uniforms.normalMap.value.wrapS = material.uniforms.normalMap.value.wrapT = 
+	THREE.RepeatWrapping;
+
+	//material = new THREE.MeshNormalMaterial();
+
+	metaballs = new THREE.MarchingCubes( resolution, material, true, false );
+	//metaballs = new THREE.Mesh( new THREE.IcosahedronGeometry( .5, 3 ), material );
+	metaballs.position.y = 1;
+	scene.add( metaballs );
+
+	metaballs.visible = false;
+
+	updateCubes( metaballs, 0, numBlobs );
+
+}
+
+function init() {
+
+	scene = new THREE.Scene();
+	var aspectRatio = window.innerWidth / window.innerHeight;
+	camera = new THREE.PerspectiveCamera( 75, aspectRatio, .01, 30 );
+	camera.target = new THREE.Vector3();
+	user.add( camera );
+	scene.add( user );
+
+	renderer = new THREE.WebGLRenderer( { antialias: true });
+	document.body.appendChild( renderer.domElement );
+	var pixelRatioScale = isMobile?.5:1;
+	if( hashOptions.scale != undefined ) pixelRatioScale = hashOptions.scale?.5:1;
+	renderer.setPixelRatio( pixelRatioScale * window.devicePixelRatio );
+	renderer.setClearColor( 0xffffff );
+	var textureLOD = null;//renderer.context.getExtension( 'EXT_shader_texture_lod' );
+
+	effect = new THREE.VREffect( renderer );
+	controls = new THREE.VRControls( camera );
+	controls.standing = true;
+	effect.setSize( window.innerWidth, window.innerHeight );
+	
+	var params = {
+		FORCE_ENABLE_VR: true,
+		hideButton: false, // Default: false.
+		isUndistorted: false // Default: false.
+	};
+	manager = new WebVRManager(renderer, effect, params);
+
+	var fragmentPrefix = '';
+	if( textureLOD ) fragmentPrefix = '#define TEXTURELOD';
+
+	cubeCamera = new THREE.CubeCamera( .00000001, 30, 32 );
+	scene.add( cubeCamera );
+
+	window.addEventListener( 'resize', onWindowResize );
+	window.addEventListener('vrdisplaypresentchange', onWindowResize, true);
+
+	var diffuseTexture, normalTexture, specularTexture, displacementTexture;
+	var diffuseOrbTexture, normalOrbTexture, specularOrbTexture, lightOrbTexture;
+
+	onWindowResize();
+
+	function prepare() {
+
+		scene.add( roomModel );
+		
+		diffuseTexture.anisotropy = 
+		specularTexture.anisotropy = 
+		normalTexture.anisotropy = 
+		displacementTexture.anisotropy = 
+		cubeCamera.renderTarget.texture.anisotropy = 
+		normalOrbTexture.anisotropy = 
+		renderer.getMaxAnisotropy();
+
+		shinyMaterial = new THREE.ShaderMaterial( {
 			uniforms: {
-	            textureMap: { type: 't', value: THREE.ImageUtils.loadTexture( 'assets/matcap.jpg' ) },
-	            normalMap: { type: 't', value: THREE.ImageUtils.loadTexture( 'assets/carbon-fiber.jpg' ) },
-	            normalScale: { type: 'f', value: .1 },
-	            texScale: { type: 'f', value: 20 },
-	            envMap: { type: 't', value: cubeCamera.renderTarget },
+				bumpiness: { type: 'f', value: 1 },
+				repeatUV: { type: 'v2', value: new THREE.Vector2( 1, 1 ) },
+				diffuseMap: { type: 't', value: diffuseTexture },
+				specularMap: { type: 't', value: specularTexture },
+				normalMap: { type: 't', value: normalTexture },
+				detailNormalMap: { type: 't', value: displacementTexture },
+				envMap: { type: 't', value: cubeCamera.renderTarget },
 				specular: { type: 'f', value: 0 },
 				roughness: { type: 'f', value: 2 },
-				cubeMapSize: { type: 'v3', value: new THREE.Vector3() }
-	        },
-			vertexShader: document.getElementById( 'mb-vs' ).textContent,
-			fragmentShader: document.getElementById( 'mb-fs' ).textContent,
-			side: THREE.DoubleSide
-			
+				cubeMapSize: { type: 'v3', value: new THREE.Vector3() },
+				rotMatrix: { type: 'm3', value: new THREE.Matrix3() }
+			},
+			vertexShader: document.getElementById( 'vertexShader' ).textContent,
+			fragmentShader: fragmentPrefix + document.getElementById( 'fragmentShader' ).textContent,
+			side: THREE.FrontSide
 		} );
 
-		material.uniforms.textureMap.value.wrapS = material.uniforms.textureMap.value.wrapT = 
-		THREE.ClampToEdgeWrapping;
-
-		material.uniforms.normalMap.value.wrapS = material.uniforms.normalMap.value.wrapT = 
+		shinyMaterial.uniforms.normalMap.value.wrapS = 
+		shinyMaterial.uniforms.normalMap.value.wrapT =
+		shinyMaterial.uniforms.detailNormalMap.value.wrapS = 
+		shinyMaterial.uniforms.detailNormalMap.value.wrapT =
+		shinyMaterial.uniforms.diffuseMap.value.wrapS = 
+		shinyMaterial.uniforms.diffuseMap.value.wrapT =
+		shinyMaterial.uniforms.specularMap.value.wrapS = 
+		shinyMaterial.uniforms.specularMap.value.wrapT =
 		THREE.RepeatWrapping;
 
-		//material = new THREE.MeshNormalMaterial();
+		progressIndicator( 91 );
 
-		metaballs = new THREE.MarchingCubes( resolution, material, true, false );
-		//metaballs = new THREE.Mesh( new THREE.IcosahedronGeometry( .5, 3 ), material );
-		metaballs.position.y = 1;
-		scene.add( metaballs );
+		baseMaterial = new THREE.MeshBasicMaterial( { map: diffuseTexture } );
+		var height = 4;
+		var scale = 1;
 
-		metaballs.visible = false;
+		roomModel.position.y = .5 * height;
+		cubeCamera.position.y = .5 * height;
 
-		updateCubes( metaballs, 0, numBlobs );
+		roomModel.children.forEach( function( e ) {
+			e.geometry.center();
 
-	}
-
-	function selectQuality() {
-
-		var links = document.querySelectorAll( 'div ul li' );
-		[].forEach.call( links, function( li ) {
-			var url = li.getAttribute( 'data-url' );
-			li.addEventListener( 'click', function( e ) {
-				var hashFields = url.split( '&' );
-				hashFields.forEach( function( e ) { 
-					var f = e.split( '=' ); 
-					var obj = {}
-					hashOptions[ f [ 0 ] ] = f[ 1 ] == 'true'?true:false;
-				} );
-				document.getElementById( 'selection' ).classList.add( 'hidden' );
-				init();
-				e.preventDefault();
-			} );
-		} );
-
-	}
-
-	function init() {
-
-		scene = new THREE.Scene();
-		var aspectRatio = window.innerWidth / window.innerHeight;
-		camera = new THREE.PerspectiveCamera( 75, aspectRatio, .01, 30 );
-		camera.target = new THREE.Vector3();
-		user.add( camera );
-		scene.add( user );
-
-		renderer = new THREE.WebGLRenderer( { antialias: true });
-		document.body.appendChild( renderer.domElement );
-		var pixelRatioScale = isMobile?.5:1;
-		if( hashOptions.scale != undefined ) pixelRatioScale = hashOptions.scale?.5:1;
-		renderer.setPixelRatio( pixelRatioScale * window.devicePixelRatio );
-		renderer.setClearColor( 0xffffff );
-		//renderer.autoClear = false;
-		var textureLOD = null;//renderer.context.getExtension( 'EXT_shader_texture_lod' );
-
-		effect = new THREE.VREffect( renderer );
-		controls = new THREE.VRControls( camera );
-		controls.standing = true;
-		effect.setSize( window.innerWidth, window.innerHeight );
-		
-		var params = {
-			FORCE_ENABLE_VR: true,
-			hideButton: false, // Default: false.
-			isUndistorted: false // Default: false.
-		};
-		manager = new WebVRManager(renderer, effect, params);
-
-		var fragmentPrefix = '';
-		if( textureLOD ) fragmentPrefix = '#define TEXTURELOD';
-
-		cubeCamera = new THREE.CubeCamera( .00000001, 30, 32 ); // parameters: near, far, resolution
-		//cubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter; // mipmap filter
-		scene.add( cubeCamera );
-
-		window.addEventListener( 'resize', onWindowResize );
-		window.addEventListener('vrdisplaypresentchange', onWindowResize, true);
-
-		var diffuseTexture, normalTexture, specularTexture, displacementTexture;
-		var diffuseOrbTexture, normalOrbTexture, specularOrbTexture, lightOrbTexture;
-
-		onWindowResize();
-
-		function prepare() {
-
-			scene.add( roomModel );
-			
-			diffuseTexture.anisotropy = 
-			specularTexture.anisotropy = 
-			normalTexture.anisotropy = 
-			displacementTexture.anisotropy = 
-			cubeCamera.renderTarget.texture.anisotropy = 
-			normalOrbTexture.anisotropy = 
-			renderer.getMaxAnisotropy();
-
-			shinyMaterial = new THREE.ShaderMaterial( {
-				uniforms: {
-					bumpiness: { type: 'f', value: 1 },
-					repeatUV: { type: 'v2', value: new THREE.Vector2( 1, 1 ) },
-					diffuseMap: { type: 't', value: diffuseTexture },
-					specularMap: { type: 't', value: specularTexture },
-					normalMap: { type: 't', value: normalTexture },
-					detailNormalMap: { type: 't', value: displacementTexture },
-					envMap: { type: 't', value: cubeCamera.renderTarget },
-					specular: { type: 'f', value: 0 },
-					roughness: { type: 'f', value: 2 },
-					cubeMapSize: { type: 'v3', value: new THREE.Vector3() },
-					rotMatrix: { type: 'm3', value: new THREE.Matrix3() }
-				},
-				vertexShader: document.getElementById( 'vertexShader' ).textContent,
-				fragmentShader: fragmentPrefix + document.getElementById( 'fragmentShader' ).textContent,
-				side: THREE.FrontSide
-			} );
-
-			shinyMaterial.uniforms.normalMap.value.wrapS = 
-			shinyMaterial.uniforms.normalMap.value.wrapT =
-			shinyMaterial.uniforms.detailNormalMap.value.wrapS = 
-			shinyMaterial.uniforms.detailNormalMap.value.wrapT =
-			shinyMaterial.uniforms.diffuseMap.value.wrapS = 
-			shinyMaterial.uniforms.diffuseMap.value.wrapT =
-			shinyMaterial.uniforms.specularMap.value.wrapS = 
-			shinyMaterial.uniforms.specularMap.value.wrapT =
-			THREE.RepeatWrapping;
-
-			progressIndicator( 91 );
-
-			baseMaterial = new THREE.MeshBasicMaterial( { map: diffuseTexture } );
-			var height = 4;
-			var scale = 1;
-
-			roomModel.position.y = .5 * height;
-			cubeCamera.position.y = .5 * height;
-
-			roomModel.children.forEach( function( e ) {
-				e.geometry.center();
-
-				var indices_array = [];
-				for( var j = 0; j < e.geometry.attributes.position.array.length / 3; j++ ){
-					indices_array.push( j );
-				}
-
-				e.geometry.setIndex( new THREE.BufferAttribute( new Uint16Array( indices_array ), 1 ) );
-
-				THREE.BufferGeometryUtils.computeTangents( e.geometry );
-				var t = e.geometry.boundingBox.max.clone();
-				t.sub( e.geometry.boundingBox.min );
-				scale = height / t.y;
-				console.log( height, t.y, scale );			
-				e.scale.set( scale, scale, scale );
-				e.material = shinyMaterial;
-				t.multiply( e.scale );
-				e.material.uniforms.cubeMapSize.value.copy( t )
-			} );
-
-			progressIndicator( 92 );
-
-			var m = new THREE.ShaderMaterial( {
-				uniforms: {
-					bumpiness: { type: 'f', value: 1 },
-					repeatUV: { type: 'v2', value: new THREE.Vector2( 1, 1 ) },
-					normalMap: { type: 't', value: normalOrbTexture },
-					detailNormalMap: { type: 't', value: displacementTexture },
-					envMap: { type: 't', value: cubeCamera.renderTarget },
-					cubeMapSize: { type: 'v3', value: new THREE.Vector3() },
-					rotMatrix: { type: 'm3', value: new THREE.Matrix3() }
-				},
-				vertexShader: document.getElementById( 'vertexShader' ).textContent,
-				fragmentShader: fragmentPrefix + document.getElementById( 'fragment2Shader' ).textContent,
-				side: THREE.DoubleSide
-			} );
-
-			m.uniforms.normalMap.value.wrapS = 
-			m.uniforms.normalMap.value.wrapT =
-			m.uniforms.detailNormalMap.value.wrapS = 
-			m.uniforms.detailNormalMap.value.wrapT =
-			THREE.RepeatWrapping;
-
-			m.uniforms.cubeMapSize.value.copy( shinyMaterial.uniforms.cubeMapSize.value )
-
-			progressIndicator( 93 );
-
-			var geometry = cubeModel.children[ 0 ].geometry;
-			
 			var indices_array = [];
-			for( var j = 0; j < geometry.attributes.position.array.length / 3; j++ ){
+			for( var j = 0; j < e.geometry.attributes.position.array.length / 3; j++ ){
 				indices_array.push( j );
 			}
 
-			geometry.setIndex( new THREE.BufferAttribute( new Uint16Array( indices_array ), 1 ) );
+			e.geometry.setIndex( new THREE.BufferAttribute( new Uint16Array( indices_array ), 1 ) );
 
-			THREE.BufferGeometryUtils.computeTangents( geometry );
-			geometry.center();
+			THREE.BufferGeometryUtils.computeTangents( e.geometry );
+			var t = e.geometry.boundingBox.max.clone();
+			t.sub( e.geometry.boundingBox.min );
+			scale = height / t.y;
+			console.log( height, t.y, scale );			
+			e.scale.set( scale, scale, scale );
+			e.material = shinyMaterial;
+			t.multiply( e.scale );
+			e.material.uniforms.cubeMapSize.value.copy( t )
+		} );
 
-			progressIndicator( 94 );
+		progressIndicator( 92 );
 
-	//		var geometry = new THREE.TorusKnotGeometry( 10, 3, 200, 32 );
-
-			sphere = new THREE.Mesh( geometry, m );
-			scene.add( sphere );
-			sphere.position.x = -.5;
-			sphere.position.y = 1.5;
-			scale *= .125;
-			sphere.scale.set( scale, scale, scale );
-
-			addMetaballs();
-
-			metaballs.material.uniforms.cubeMapSize.value.copy( shinyMaterial.uniforms.cubeMapSize.value )
-
-			progressIndicator( 95 );
-
-			ready();
-		}
-
-		function ready() {
-
-			scene.overrideMaterial = baseMaterial;
-			sphere.visible = false;
-			metaballs.visible = false;
-			cubeCamera.updateCubeMap( renderer, scene );
-			scene.overrideMaterial = null;
-			cubeMapGenerated = true;
-			sphere.visible = true;
-			metaballs.visible = true;
-
-			progressIndicator( 96 );
-
-			renderer.domElement.style.display = 'none';
-			renderer.render(scene, camera );
-			renderer.setClearColor( 0 );
-			renderer.clear();
-			renderer.setClearColor( 0xffffff );
-			renderer.domElement.style.display = 'block';
-
-			progressIndicator( 100 );
-
-			startTime = Date.now();
-			startRendering();
-
-			document.getElementById( 'progress' ).style.opacity = 0;
-
-			/*document.body.addEventListener( 'click', function() {
-				effect.setFullScreen( true );
-			});*/
-
-		}
-
-		function startRendering() {
-
-			setTimeout( render, 1000 );
-
-		}
-
-		window.addEventListener( 'keydown', function( e ) {
-			if( e.keyCode == 77 ) {
-				showMetaballs = !showMetaballs;
-			}
-			/*if( e.keyCode == 32 ) {
-				startTime = Date.now();
-				audio.currentTime = 0;
-			}*/
-		} )
-
-		var l = new THREE.LoadingManager( 
-			function() { console.log( 'onLoad' ); prepare(); }, 
-			function( item, loaded, total ) { 
-				progressIndicator( loaded * 90 / total ) 
+		var m = new THREE.ShaderMaterial( {
+			uniforms: {
+				bumpiness: { type: 'f', value: 1 },
+				repeatUV: { type: 'v2', value: new THREE.Vector2( 1, 1 ) },
+				normalMap: { type: 't', value: normalOrbTexture },
+				detailNormalMap: { type: 't', value: displacementTexture },
+				envMap: { type: 't', value: cubeCamera.renderTarget },
+				cubeMapSize: { type: 'v3', value: new THREE.Vector3() },
+				rotMatrix: { type: 'm3', value: new THREE.Matrix3() }
 			},
-			function() { console.log( 'onError' ) } 
-			);
-		var t = new THREE.TextureLoader( l );
+			vertexShader: document.getElementById( 'vertexShader' ).textContent,
+			fragmentShader: fragmentPrefix + document.getElementById( 'fragment2Shader' ).textContent,
+			side: THREE.DoubleSide
+		} );
 
-		var res = '4096';
-		t.load( 'assets/baked_' + res + '.jpg', function( t ) { diffuseTexture = t; } );
-		t.load( 'assets/spec_' + res + '.jpg', function( t ) { specularTexture = t; } );
-		t.load( 'assets/norm_' + res + '.jpg', function( t ) { normalTexture = t; } );
+		m.uniforms.normalMap.value.wrapS = 
+		m.uniforms.normalMap.value.wrapT =
+		m.uniforms.detailNormalMap.value.wrapS = 
+		m.uniforms.detailNormalMap.value.wrapT =
+		THREE.RepeatWrapping;
 
-		t.load( 'assets/displacement.jpg', function( t ) { displacementTexture = t; } );
+		m.uniforms.cubeMapSize.value.copy( shinyMaterial.uniforms.cubeMapSize.value )
 
-		t.load( 'assets/orb-norm.png', function( t ) { normalOrbTexture = t; } );
+		progressIndicator( 93 );
 
-		var m = new THREE.OBJLoader( l );
-		m.load( 'assets/hall.obj', function( m ) { roomModel = m; } );
-		m.load( 'assets/orb.obj', function( m ) { cubeModel = m; } );
-
-	}
-
-	function render( timestamp ) {
-
-		if( showMetaballs ) {
-			metaballs.visible = true;
-			updateCubes( metaballs, .0005 * timestamp, numBlobs );
-		} else {
-			metaballs.visible = false;
+		var geometry = cubeModel.children[ 0 ].geometry;
+		
+		var indices_array = [];
+		for( var j = 0; j < geometry.attributes.position.array.length / 3; j++ ){
+			indices_array.push( j );
 		}
 
-		sphere.rotation.y += .01;
-		sphere.position.x = 6 * Math.cos( .0001 * timestamp );
-		sphere.position.y = 2 + 1 * Math.cos( .00011 * timestamp );
+		geometry.setIndex( new THREE.BufferAttribute( new Uint16Array( indices_array ), 1 ) );
 
-		controls.update();
+		THREE.BufferGeometryUtils.computeTangents( geometry );
+		geometry.center();
 
-		var viewInv = new THREE.Matrix4().getInverse( sphere.matrixWorld );
-		var e = viewInv.elements;
-		var viewRot = new THREE.Matrix3().set( e[0],e[1],e[2], e[4],e[5],e[6], e[8],e[9],e[10] ); 
+		progressIndicator( 94 );
 
-		roomModel.children[ 0 ].material.uniforms.rotMatrix.value.identity();
-		sphere.material.uniforms.rotMatrix.value.copy( viewRot );
+//		var geometry = new THREE.TorusKnotGeometry( 10, 3, 200, 32 );
 
-		manager.render( scene, camera, timestamp );
+		sphere = new THREE.Mesh( geometry, m );
+		scene.add( sphere );
+		sphere.position.x = -.5;
+		sphere.position.y = 1.5;
+		scale *= .125;
+		sphere.scale.set( scale, scale, scale );
 
-		requestAnimationFrame(render);
+		addMetaballs();
+
+		metaballs.material.uniforms.cubeMapSize.value.copy( shinyMaterial.uniforms.cubeMapSize.value )
+
+		progressIndicator( 95 );
+
+		ready();
+	}
+
+	function ready() {
+
+		scene.overrideMaterial = baseMaterial;
+		sphere.visible = false;
+		metaballs.visible = false;
+		cubeCamera.updateCubeMap( renderer, scene );
+		scene.overrideMaterial = null;
+		cubeMapGenerated = true;
+		sphere.visible = true;
+		metaballs.visible = true;
+
+		progressIndicator( 96 );
+
+		renderer.domElement.style.display = 'none';
+		renderer.render(scene, camera );
+		renderer.setClearColor( 0 );
+		renderer.clear();
+		renderer.setClearColor( 0xffffff );
+		renderer.domElement.style.display = 'block';
+
+		progressIndicator( 100 );
+
+		startTime = Date.now();
+		startRendering();
+
+		document.getElementById( 'progress' ).style.opacity = 0;
 
 	}
 
-	function onWindowResize() {
+	function startRendering() {
 
-		renderer.setSize( window.innerWidth, window.innerHeight );
-		camera.aspect = window.innerWidth / window.innerHeight;
-		camera.updateProjectionMatrix();
+		setTimeout( render, 1000 );
 
-		effect.setSize( window.innerWidth, window.innerHeight );
-		
 	}
 
-	window.addEventListener( 'load', selectQuality );
+	window.addEventListener( 'keydown', function( e ) {
+		if( e.keyCode == 77 ) {
+			showMetaballs = !showMetaballs;
+		}
+	} )
+
+	var l = new THREE.LoadingManager( 
+		function() { console.log( 'onLoad' ); prepare(); }, 
+		function( item, loaded, total ) { 
+			progressIndicator( loaded * 90 / total ) 
+		},
+		function() { console.log( 'onError' ) } 
+		);
+	var t = new THREE.TextureLoader( l );
+
+	var res = '4096';
+	t.load( 'assets/baked_' + res + '.jpg', function( t ) { diffuseTexture = t; } );
+	t.load( 'assets/spec_' + res + '.jpg', function( t ) { specularTexture = t; } );
+	t.load( 'assets/norm_' + res + '.jpg', function( t ) { normalTexture = t; } );
+
+	t.load( 'assets/displacement.jpg', function( t ) { displacementTexture = t; } );
+
+	t.load( 'assets/orb-norm.png', function( t ) { normalOrbTexture = t; } );
+
+	var m = new THREE.OBJLoader( l );
+	m.load( 'assets/hall.obj', function( m ) { roomModel = m; } );
+	m.load( 'assets/orb.obj', function( m ) { cubeModel = m; } );
+
+}
+
+function render( timestamp ) {
+
+	if( showMetaballs ) {
+		metaballs.visible = true;
+		updateCubes( metaballs, .0005 * timestamp, numBlobs );
+	} else {
+		metaballs.visible = false;
+	}
+
+	sphere.rotation.y += .01;
+	sphere.position.x = 6 * Math.cos( .0001 * timestamp );
+	sphere.position.y = 2 + 1 * Math.cos( .00011 * timestamp );
+
+	controls.update();
+
+	var viewInv = new THREE.Matrix4().getInverse( sphere.matrixWorld );
+	var e = viewInv.elements;
+	var viewRot = new THREE.Matrix3().set( e[0],e[1],e[2], e[4],e[5],e[6], e[8],e[9],e[10] ); 
+
+	roomModel.children[ 0 ].material.uniforms.rotMatrix.value.identity();
+	sphere.material.uniforms.rotMatrix.value.copy( viewRot );
+
+	manager.render( scene, camera, timestamp, function() {
+
+	} );
+
+	requestAnimationFrame(render);
+
+}
+
+function onWindowResize() {
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	effect.setSize( window.innerWidth, window.innerHeight );
+	
+}
+
+document.getElementById( 'startBtn' ).addEventListener( 'click', function( e ) {
+	document.getElementById( 'selection' ).style.display = 'none'
+	init()
+	e.preventDefault()
+} );
 
 </script>
 </body>
