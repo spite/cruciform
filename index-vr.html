@@ -528,6 +528,56 @@ function addMetaballs() {
 
 }
 
+var FixLoader = function ( manager ) {
+
+	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
+	this.queue = {};
+
+};
+
+FixLoader.prototype = {
+
+	constructor: FixLoader,
+
+	load: function ( url, onLoad, onProgress, onError ) {
+
+		var texture = new THREE.Texture();
+		var scope = this;
+		scope.manager.itemStart( url );
+
+		var img = new Image();
+		img.addEventListener( 'load', function() {
+
+			texture.image = this;
+			texture.needsUpdate = true;
+
+			if ( onLoad !== undefined ) {
+
+				onLoad( texture );
+
+			}
+
+			if( onProgress ) onProgress();
+
+			scope.manager.itemEnd( url );
+
+			delete scope.queue[ url ];
+			for( var j in scope.queue ) {
+				scope.queue[ j ].src = j;
+				break;
+			}
+
+		} );
+		this.queue[ url ] = img;
+		if( Object.keys( this.queue ).length === 1 ) img.src = url;
+
+		return texture;
+
+	}
+
+};
+
+
 function init() {
 
 	scene = new THREE.Scene();
@@ -749,16 +799,16 @@ function init() {
 		},
 		function() { console.log( 'onError' ) } 
 		);
-	var t = new THREE.TextureLoader( l );
+	var t = new FixLoader( l );//THREE.TextureLoader( l );
 
 	var res = '4096';
-	t.load( 'assets/baked_' + res + '.jpg', function( t ) { diffuseTexture = t; } );
-	t.load( 'assets/spec_' + res + '.jpg', function( t ) { specularTexture = t; } );
-	t.load( 'assets/norm_' + res + '.jpg', function( t ) { normalTexture = t; } );
+	diffuseTexture = t.load( 'assets/baked_' + res + '.jpg' );
+	specularTexture = t.load( 'assets/spec_' + res + '.jpg' );
+	normalTexture = t.load( 'assets/norm_' + res + '.jpg' );
 
-	t.load( 'assets/displacement.jpg', function( t ) { displacementTexture = t; } );
+	displacementTexture = t.load( 'assets/displacement.jpg' );
 
-	t.load( 'assets/orb-norm.png', function( t ) { normalOrbTexture = t; } );
+	normalOrbTexture = t.load( 'assets/orb-norm.png' );
 
 	var m = new THREE.OBJLoader( l );
 	m.load( 'assets/hall.obj', function( m ) { roomModel = m; } );
