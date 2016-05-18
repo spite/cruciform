@@ -62,6 +62,7 @@
 			<h1>cru·ci·form WebVR</h1>
 			<p>Made using <a href="https://www.khronos.org/webgl/" rel="external">WebGL</a> with <a href="http://threejs.org/" rel="external" >three.js</a>, and <a href="http://webvr.info/" rel="external" >WebVR</a> with <a href="https://github.com/borismus/webvr-boilerplate" rel="external" >WebVR Boilerplate</a>.</p>
 			<p>Available for Google Cardboard, Oculus Rift and HTC Vive.</p>
+			<p><b>If your computer can handle it, press 'm' to turn metaballs on!</b></p>
 
 			<p><a href="#" id="startBtn">Start</a></p>
 
@@ -826,7 +827,7 @@ function render( timestamp ) {
 	}
 
 	sphere.rotation.y += .01;
-	sphere.position.x = 6 * Math.cos( .0001 * timestamp );
+	sphere.position.x = 4 * Math.cos( .0001 * timestamp );
 	sphere.position.y = 2 + 1 * Math.cos( .00011 * timestamp );
 
 	controls.update();
