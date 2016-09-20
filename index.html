@@ -17,36 +17,30 @@
 	<meta itemprop="description" content="A study in architectural visualisation">
 	<meta itemprop="image" content="http://www.clicktorelease.com/code/cruciform/thumb.jpg">
 
-	<link href='http://fonts.googleapis.com/css?family=Raleway:400,200,600' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Raleway:400,200,600' rel='stylesheet' type='text/css'>
 
 	<style>
 		*{box-sizing: border-box; margin: 0; padding: 0; }
 		body{overflow:hidden; background-color: black; font-family: Raleway, sans-serif; color: white; white-space: nowrap; }
 		.rs-base{ display: none}
-		#intro{ z-index: 100; position: absolute; left: 50%; top: 50%; transform: translate3d( -50%, -50%, 0 ); -webkit-transform: translate3d( -50%, -50%, 0 ); text-align: center; opacity: 0; pointer-events: none;}
 		p{ font-weight: 100; font-size: 14px }
 		h1{ font-weight: 500; font-size: 47px;}
 		span{ margin-right: 2.5em;}
-		#credits{ z-index: 100; position: absolute; left: 50%; top: 50%; transform: translate3d( -50%, 50px, 0 );-webkit-transform: translate3d( -50%, 50px, 0 ); text-align: center; opacity: 1; line-height: 2em; opacity: 0; pointer-events: none; }
-		a{ color: inherit; text-decoration: none;}
-		a:hover{ text-decoration: underline;}
-		#credits p{ font-size: 14px; }
+		a{ color: inherit; text-decoration: none; padding-bottom: .2em; border-bottom: .1em solid rgba(255,255,255,.5); font-weight: bold;}
+		a:hover{ border-color: white}
 		#progress{ position: absolute; left: 0; top: 50%; margin-top: -1px; height: 2px; background-color: white; transition: opacity 500ms ease-out; will-change: opacity; }
-		#tapToStart{ position: absolute; left: 0; right: 0; top: 0; bottom: 0; width: 100%; height: 100%; transition: opacity 500ms ease-out; will-change: pointer-events: auto;}
 		.hidden{ opacity: 0; pointer-events: none;}
-		#tapToStart p{ position: absolute; left: 0; right: 0; top: 50%; margin-top: -2em; text-align: center; }
-		#headphones{ position: absolute; left: 50%; top: 25%; margin-left: -5vh; margin-top: -5vh; width: 10vh; height: 10vh; opacity: 0; background: url( assets/headphones.svg ); background-size: cover; transition: opacity 500ms ease-out; will-change: opacity; }
-		#pointer{ position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; margin-left: -16px; margin-top: -16px; border: 1px solid #ff00ff;}
 
 		#selection{ z-index: 200;position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: auto; white-space: normal; transition: opacity 500ms ease-out;}
 		.bkg{ position: fixed; background-image: url( assets/bkg.jpg ); background-size: cover; background-repeat: no-repeat; background-position: 50% 50%;  opacity: .3; left: 0; top: 0; right: 0; width: 100%; height: 100%; }
 		#block { position: absolute; left: 50%; top: 50px; width: 600px; margin-left: -300px; }
 		#block p{ font-weight: 100;  margin-bottom: 10px; line-height: 1.4em; }
-		#block h1{ font-weight: 500; font-size: 45px; margin-bottom: 20px;}
+		#block h1{ font-weight: 500; font-size: 45px; margin-bottom: 0px;}
 		#block ul{ margin-left: 0; list-style-type: none; margin-top: 1em; margin-bottom: 2em;}
 		#block li{ margin-bottom: .5em; cursor: pointer; color: #aaa;}
 		#block li:hover{ color: white;}
 		#block li b{ width: 10em; display: inline-block;}
+		#startBtn{ display: inline-block; font-size: 30px; margin: 20px 0; }
 
 		@media only screen and (max-width : 690px) {
 			#block{ width: 90%; margin-left: -45%;}
@@ -56,62 +50,36 @@
 			#block li span:nth-child(2){ margin-left: .6em;}
 		}
 
-
 	</style>
 </head>
 <body>
 
-	<div id="intro" >
-		<p>Study in architecture visualisation</p>
-		<h1>cru·ci·form</h1>
-	</div>
-
-	<div id="credits">
-		<p><a href="http://twitter.com/thespite"><b>Jaume</b> Sanchez</a> <span></span><a href="https://twitter.com/sejnulla/"><b>Emil</b> Karlsson</a></p>
-		<p>Music: <i>Sail to Europe - <b>Cliff</b> Martinez</i></p>
-	</div>
-
 	<div id="progress"></div>
-
-	<div id="tapToStart" class="hidden" ><p>Tap to start</p></div>
-
-	<div id="headphones" ></div>
-
-	<!--<div id="pointer"></div>-->
 
 	<div id="selection">
 		<div class="bkg" ></div>
 		<div id="block">
-			<h1>cru·ci·form</h1>
-			<p>Please select a quality preset to play.</p>
-			<p><i>It's difficult to choose an option for you, since it would be a blind guess: there's just too many devices out there and very little real info we can use in JavaScript.</i></p>
-			<p>On mobile or tablet, try LOW or NORMAL.<br/>
-			On desktop, try NORMAL or HIGH.<br/>
-			If your selection doesn't perform well, try LOW or VERY LOW.</p>
-			<p><b>Note:</b> by popular demand, you can go into <b>interactive mode</b> by tapping/clicking <b>three times</b>.</p>
-			<ul>
-				<li data-url="dof=false&post=false"><span>- <b>Very low quality</b></span> <span>No postprocessing.</li>
-				<li data-url="dof=false&post=true&scale=true"><span>- <b>Low quality</b></span> <span>Postprocessing without DOF, half-resolution</span></li>
-				<li data-url="dof=true&post=true&scale=true"><span>- <b>Normal quality</b></span> <span>Full postprocessing, half-resolution</span></li>
-				<li data-url="dof=true&post=true&scale=false"><span>- <b>High quality</b></span> <span>Full postprocessing, full-resolution</span></li>
-			</ul>
-			<p>Read more about the project: <a href="http://www.clicktorelease.com/blog/making-of-cruciform" ><b>Making of</b></a>.</p>
-			<p>Enjoy!<br/><i><a href="http://twitter.com/thespite">@thespite</a> + <a href="https://twitter.com/sejnulla/">@sejnulla</a></i></p>
+			<h1>cru·ci·form WebVR</h1>
+			<p>Made using <a href="https://www.khronos.org/webgl/" rel="external">WebGL</a> with <a href="http://threejs.org/" rel="external" >three.js</a>, and <a href="http://webvr.info/" rel="external" >WebVR</a> with <a href="https://github.com/borismus/webvr-boilerplate" rel="external" >WebVR Boilerplate</a>.</p>
+			<p>Available for Google Cardboard, Oculus Rift and HTC Vive.</p>
+			<p><b>If your computer can handle it, press 'm' to turn metaballs on!</b></p>
+
+			<p><a href="#" id="startBtn">Start</a></p>
+
+			<p>Read more about the project: <a href="http://www.clicktorelease.com/blog/making-of-cruciform" rel="external">Making of</a>.</p>
+			<p>Enjoy! <i><a href="http://twitter.com/thespite" rel="external">@thespite</a> + <a href="https://twitter.com/sejnulla/" rel="external">@sejnulla</a></i></p>
 		</div>
 	</div>
 
 <script src="js/three.min.js"></script>
+<script src="js/MarchingCubes.js"></script>
 <script src="js/BufferGeometryUtils.js"></script>
-<!--<script src="js/DDSLoader.js"></script>-->
 <script src="js/OBJLoader.js"></script>
 <script src="js/OrbitControls.js"></script>
-<script src="js/ImprovedNoise.js"></script>
-<script src="bower_components/Wagner/Wagner.js"></script>
-<script src="bower_components/Wagner/Wagner.base.js"></script>
-<script src="bower_components/Wagner/ShaderLoader.js"></script>
-<script src="js/timeline.js"></script>
-<script src="js/storyboard.js"></script>
-<script src="js/CubemapToEquirectangular.js"></script>
+<script src="js/VREffect.js"></script>
+<script src="js/VRControls.js"></script>
+<script src="js/webvr-polyfill.js"></script>
+<script src="js/webvr-manager.js"></script>
 
 <script type="x-shader/x-vertex" id="vertexShader">
 
@@ -121,6 +89,7 @@ varying mat3 tbnMatrix;
 varying vec2 vUv;
 uniform vec2 repeatUV;
 uniform float bumpiness;
+uniform mat3 rotMatrix;
 
 mat3 m3( mat4 mIn ) {
 
@@ -181,9 +150,7 @@ uniform float bumpiness;
 uniform float roughness;
 
 uniform vec3 cubeMapSize;
-//const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 6.32 );
-//const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 7.961074 );
-const vec3 cubeMapPos = vec3( 0, 0., 0 );
+const vec3 cubeMapPos = vec3( 0, 2., 0 );
 
 vec3 gamma(vec3 color){
 	return pow(color, vec3(1.0/2.0));
@@ -192,8 +159,8 @@ vec3 gamma(vec3 color){
 vec3 parallaxCorrectNormal( vec3 v, vec3 cubeSize, vec3 cubePos ) {
 
 	vec3 nDir = normalize(v);
-	vec3 rbmax = (   .5 * ( cubeSize - cubePos ) - pos ) / nDir;
-	vec3 rbmin = ( - .5 * ( cubeSize - cubePos ) - pos ) / nDir;
+	vec3 rbmax = (   .5 * cubeSize - pos + cubePos ) / nDir;
+	vec3 rbmin = ( - .5 * cubeSize - pos + cubePos ) / nDir;
 
 	vec3 rbminmax;
 	rbminmax.x = ( nDir.x > 0. )?rbmax.x:rbmin.x;
@@ -260,9 +227,8 @@ uniform sampler2D specularMap;
 uniform float bumpiness;
 uniform float roughness;
 
-const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 6.32 );
-//const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 7.961074 );
-const vec3 cubeMapPos = vec3( 0, 0., 0 );
+uniform vec3 cubeMapSize;
+const vec3 cubeMapPos = vec3( 0, 2., 0 );
 
 vec3 gamma(vec3 color){
 	return pow(color, vec3(1.0/2.0));
@@ -271,8 +237,8 @@ vec3 gamma(vec3 color){
 vec3 parallaxCorrectNormal( vec3 v, vec3 cubeSize, vec3 cubePos ) {
 
 	vec3 nDir = normalize(v);
-	vec3 rbmax = (   .5 * ( cubeSize - cubePos ) - pos ) / nDir;
-	vec3 rbmin = ( - .5 * ( cubeSize - cubePos ) - pos ) / nDir;
+	vec3 rbmax = (   .5 * cubeSize - pos + cubePos ) / nDir;
+	vec3 rbmin = ( - .5 * cubeSize - pos + cubePos ) / nDir;
 
 	vec3 rbminmax;
 	rbminmax.x = ( nDir.x > 0. )?rbmax.x:rbmin.x;
@@ -314,530 +280,591 @@ void main()  {
 
 </script>
 
+<script type="x-shader/x-vertex" id="mb-vs">
+
+	varying vec3 vNormal;
+    varying vec4 vPosition;
+    varying vec4 vOPosition;
+	varying vec3 vONormal;
+    varying vec3 vU;
+    varying vec3 vEye;
+    varying vec3 pos;
+    varying vec3 view;
+
+ mat3 m3( mat4 mIn ) {
+
+	mat3 mOut;
+
+	mOut[ 0 ][ 0 ] = mIn[ 0 ][ 0 ];
+	mOut[ 0 ][ 1 ] = mIn[ 0 ][ 1 ];
+	mOut[ 0 ][ 2 ] = mIn[ 0 ][ 2 ];
+
+	mOut[ 1 ][ 0 ] = mIn[ 1 ][ 0 ];
+	mOut[ 1 ][ 1 ] = mIn[ 1 ][ 1 ];
+	mOut[ 1 ][ 2 ] = mIn[ 1 ][ 2 ];
+
+	mOut[ 2 ][ 0 ] = mIn[ 2 ][ 0 ];
+	mOut[ 2 ][ 1 ] = mIn[ 2 ][ 1 ];
+	mOut[ 2 ][ 2 ] = mIn[ 2 ][ 2 ];
+
+	return mOut;
+}
+
+    void main() {
+
+        vOPosition = modelViewMatrix * vec4( position, 1.0 );
+        gl_Position = projectionMatrix * vOPosition;
+
+        vU = normalize( vec3( modelViewMatrix * vec4( position, 1.0 ) ) );
+
+        vPosition = vec4( position, 1.0 );
+        vNormal = normalMatrix * normal;
+        vONormal = normal;
+
+        pos = vec3(modelMatrix * vec4( position, 1. ) );
+		view = pos - cameraPosition;
+
+    }
+
+</script>
+
+<script type="x-shader/x-vertex" id="mb-fs">
+
+	uniform sampler2D textureMap;
+    uniform sampler2D normalMap;
+    uniform float normalScale;
+    uniform float texScale;
+
+    uniform samplerCube envMap;
+    uniform float roughness;
+
+    uniform vec3 cubeMapSize;
+	const vec3 cubeMapPos = vec3( 0, 2., 0 );
+
+    varying vec3 vNormal;
+    varying vec4 vPosition;
+    varying vec4 vOPosition;
+	varying vec3 vONormal;
+	varying vec3 vU;
+    varying vec3 vEye;
+    varying vec3 pos;
+    varying vec3 view;
+
+	float random(vec3 scale,float seed){return fract(sin(dot(gl_FragCoord.xyz+seed,scale))*43758.5453+seed);}
+
+	vec3 parallaxCorrectNormal( vec3 v, vec3 cubeSize, vec3 cubePos ) {
+
+		vec3 nDir = normalize(v);
+		vec3 rbmax = (   .5 * cubeSize - pos + cubePos ) / nDir;
+		vec3 rbmin = ( - .5 * cubeSize - pos + cubePos ) / nDir;
+
+		vec3 rbminmax;
+		rbminmax.x = ( nDir.x > 0. )?rbmax.x:rbmin.x;
+		rbminmax.y = ( nDir.y > 0. )?rbmax.y:rbmin.y;
+		rbminmax.z = ( nDir.z > 0. )?rbmax.z:rbmin.z;
+
+		float correction = min(min(rbminmax.x, rbminmax.y), rbminmax.z);
+		vec3 boxIntersection = pos + nDir * correction;
+
+		return boxIntersection - cubePos;
+	}
+
+    void main() {
+
+        vec3 n = normalize( vONormal.xyz );
+        vec3 blend_weights = abs( n );
+        blend_weights = ( blend_weights - 0.2 ) * 7.;
+        blend_weights = max( blend_weights, 0. );
+        blend_weights /= ( blend_weights.x + blend_weights.y + blend_weights.z );
+
+        vec2 coord1 = vPosition.yz * texScale;
+        vec2 coord2 = vPosition.zx * texScale;
+        vec2 coord3 = vPosition.xy * texScale;
+
+        vec3 bump1 = texture2D( normalMap, coord1 ).rgb;
+        vec3 bump2 = texture2D( normalMap, coord2 ).rgb;
+        vec3 bump3 = texture2D( normalMap, coord3 ).rgb;
+
+        vec3 blended_bump = bump1 * blend_weights.xxx +
+                            bump2 * blend_weights.yyy +
+                            bump3 * blend_weights.zzz;
+
+        vec3 tanX = vec3( vONormal.x, -vONormal.z, vONormal.y);
+        vec3 tanY = vec3( vONormal.z, vONormal.y, -vONormal.x);
+        vec3 tanZ = vec3(-vONormal.y, vONormal.x, vONormal.z);
+        vec3 blended_tangent = tanX * blend_weights.xxx +
+                               tanY * blend_weights.yyy +
+                               tanZ * blend_weights.zzz;
+
+        vec3 normalTex = blended_bump * 2.0 - 1.0;
+        normalTex.xy *= normalScale;
+        normalTex.y *= -1.;
+        normalTex = normalize( normalTex );
+        mat3 tsb = mat3( normalize( blended_tangent ), normalize( cross( vONormal, blended_tangent ) ), normalize( vONormal ) );
+        vec3 finalNormal = tsb * normalTex;
+
+       	vec3 vVec = normalize( view );
+       	vec3 nVec = normalize( finalNormal );
+        vec3 rVec = parallaxCorrectNormal( reflect( vVec, nVec ), cubeMapSize, cubeMapPos );
+
+		vec3 env = textureCube( envMap, rVec, roughness ).rgb;
+		float rim = 1. - abs( dot( nVec, vVec) );
+		vec3 base = ( .5 + .2 * rim ) * env;
+
+        gl_FragColor = vec4( base, 1. );
+
+}
+
+</script>
+
 <script>
 
-	'use strict'
+'use strict'
 
-	WAGNER.vertexShadersPath = 'bower_components/Wagner/vertex-shaders';
-	WAGNER.fragmentShadersPath = 'bower_components/Wagner/fragment-shaders';
-	WAGNER.assetsPath = 'bower_components/Wagner/assets/';
+var links = document.querySelectorAll( 'a[rel=external]' );
+for( var j = 0; j < links.length; j++ ) {
+	var a = links[ j ];
+	a.addEventListener( 'click', function( e ) {
+		window.open( this.href, '_blank' );
+		e.preventDefault();
+	}, false );
+}
 
-	var audio = new Audio();
+WebVRConfig = {
+	//BUFFER_SCALE: 0.5,
+};
 
-	var composer;
-	var vignettePass, FXAAPass, bloomPass, lensPass, DOFPass, rgbSplitPass, noisePass;
-	var bokehPass, bleachPass;
+var effect, controls, manager;
+var user = new THREE.Object3D();
+user.position.x = 1
 
-	var scene, camera, controls, renderer, cubeCamera, cubeMapGenerated = false;
-	var sphere;
-	var equi;
+var scene, camera, controls, renderer, cubeCamera, cubeMapGenerated = false;
+var sphere;
 
-	var depthMaterial = new THREE.MeshBasicMaterial();
+var startTime = Date.now();
+var tmpVector = new THREE.Vector3();
+var raycaster = new THREE.Raycaster();
+var centerVector = new THREE.Vector2( 0, 0 );
+var baseMaterial, shinyMaterial;
 
-	var dof = true, bloom = true, fxaa = true, vignette = true, bleach = true,
-		lens = false, rgbSplit = true, bokeh = false, noise = true;
+var roomModel, cubeModel;
+var metaballs;
 
-	var startTime = Date.now();
-	var tmpVector = new THREE.Vector3();
-	var raycaster = new THREE.Raycaster();
-	var centerVector = new THREE.Vector2( 0, 0 );
-	var depthTexture = null;
-	var baseMaterial, shinyMaterial;
+var progressIndicator = ( function getProgressFn() {
 
-	WAGNER.BokehPoisonPass = function() {
+	var progress = document.getElementById( 'progress' );
+	return function( p ) {
 
-		WAGNER.Pass.call( this );
-		WAGNER.log( 'BokehPoison Pass constructor' );
-		this.loadShader( 'bokeh-poison-dof-fs.glsl' );
-
-		this.params.amount = 10;
-		this.params.radius = 1;
-		this.params.tBias = null
-		this.params.focalDistance = 1;
-		this.params.aperture = 1;
-
+		progress.style.width = p + '%';
 	};
 
-	WAGNER.BokehPoisonPass.prototype = Object.create( WAGNER.Pass.prototype );
+} )();
 
-	WAGNER.BokehPoisonPass.prototype.run = function( c ) {
+var isMobile = 'ontouchstart' in window;
+var hashOptions = {};
 
-		this.shader.uniforms.amount.value = this.params.amount;
-		this.shader.uniforms.radius.value = this.params.radius;
-		this.shader.uniforms.focalDistance.value = this.params.focalDistance;
-		this.shader.uniforms.aperture.value = this.params.aperture;
-		this.shader.uniforms.tBias.value = this.params.tBias;
-		c.pass( this.shader );
+var resolution = 50, numBlobs = 10;
 
-	};
+var showMetaballs = false;
 
-	var intro = document.getElementById( 'intro' ),
-	credits = document.getElementById( 'credits' ),
-	tapToStart = document.getElementById( 'tapToStart' );
+function updateCubes( object, time, numblobs, floor, wallx, wallz ) {
 
-	var iNoise = new ImprovedNoise();
+	object.reset();
 
-	var useAudio = true;
-	var intro, title, textScene, textCamera;
-	var manual = false;
-	//manual = true;
-	var scale = 1;
+	// fill the field with some metaballs
 
-	var roomModel, cubeModel;
+	var i, ballx, bally, ballz, subtract, strength;
 
-	var progressIndicator = ( function getProgressFn() {
+	subtract = 12;
+	strength = 1.2 / ( ( Math.sqrt( numblobs ) - 1 ) / 4 + 1 );
 
-		var progress = document.getElementById( 'progress' );
-		return function( p ) {
+	for ( i = 0; i < numblobs; i++ ) {
 
-			progress.style.width = p + '%';
-		};
+		ballx = Math.sin( i + 1.26 * time * ( 1.03 + 0.5 * Math.cos( 0.21 * i ) ) ) * 0.27 + 0.5;
+		bally = Math.cos( i + 1.12 * time * 0.21 * Math.sin( ( 0.72 + 0.83 * i ) ) ) * 0.27 + 0.5;
+		ballz = Math.cos( i + 1.32 * time * 0.1 * Math.sin( ( 0.92 + 0.53 * i ) ) ) * 0.27 + 0.5;
 
-	} )();
-
-	var isMobile = 'ontouchstart' in window;
-	var hashOptions = {};
-
-	function selectQuality() {
-
-		var links = document.querySelectorAll( 'div ul li' );
-		[].forEach.call( links, function( li ) {
-			var url = li.getAttribute( 'data-url' );
-			li.addEventListener( 'click', function( e ) {
-				var hashFields = url.split( '&' );
-				hashFields.forEach( function( e ) {
-					var f = e.split( '=' );
-					var obj = {}
-					hashOptions[ f [ 0 ] ] = f[ 1 ] == 'true'?true:false;
-				} );
-				document.getElementById( 'selection' ).classList.add( 'hidden' );
-				init();
-				e.preventDefault();
-			} );
-		} );
+		object.addBall( ballx, bally, ballz, strength, subtract );
 
 	}
 
-	function goInteractive() {
+	object.invalidated = true;
 
-		manual = true;
-		controls = new THREE.OrbitControls( camera );
-		sphere.visible = true;
-		sphere.scale.set( .2, .2, .2 );
-		vignettePass.params.boost = 2;
+}
+
+function addMetaballs() {
+
+	var material = new THREE.ShaderMaterial( {
+
+		uniforms: {
+            textureMap: { type: 't', value: THREE.ImageUtils.loadTexture( 'assets/matcap.jpg' ) },
+            normalMap: { type: 't', value: THREE.ImageUtils.loadTexture( 'assets/carbon-fiber.jpg' ) },
+            normalScale: { type: 'f', value: .1 },
+            texScale: { type: 'f', value: 20 },
+            envMap: { type: 't', value: cubeCamera.renderTarget },
+			specular: { type: 'f', value: 0 },
+			roughness: { type: 'f', value: 2 },
+			cubeMapSize: { type: 'v3', value: new THREE.Vector3() }
+        },
+		vertexShader: document.getElementById( 'mb-vs' ).textContent,
+		fragmentShader: document.getElementById( 'mb-fs' ).textContent,
+		side: THREE.DoubleSide
+
+	} );
+
+	material.uniforms.textureMap.value.wrapS = material.uniforms.textureMap.value.wrapT =
+	THREE.ClampToEdgeWrapping;
+
+	material.uniforms.normalMap.value.wrapS = material.uniforms.normalMap.value.wrapT =
+	THREE.RepeatWrapping;
+
+	//material = new THREE.MeshNormalMaterial();
+
+	metaballs = new THREE.MarchingCubes( resolution, material, true, false );
+	//metaballs = new THREE.Mesh( new THREE.IcosahedronGeometry( .5, 3 ), material );
+	metaballs.position.y = 1;
+	scene.add( metaballs );
+
+	metaballs.visible = false;
+
+	updateCubes( metaballs, 0, numBlobs );
+
+}
+
+var FixLoader = function ( manager ) {
+
+	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
+	this.queue = {};
+
+};
+
+FixLoader.prototype = {
+
+	constructor: FixLoader,
+
+	load: function ( url, onLoad, onProgress, onError ) {
+
+		var texture = new THREE.Texture();
+		var scope = this;
+		scope.manager.itemStart( url );
+
+		var img = new Image();
+		img.addEventListener( 'load', function() {
+
+			texture.image = this;
+			texture.needsUpdate = true;
+
+			if ( onLoad !== undefined ) {
+
+				onLoad( texture );
+
+			}
+
+			if( onProgress ) onProgress();
+
+			scope.manager.itemEnd( url );
+
+			delete scope.queue[ url ];
+			for( var j in scope.queue ) {
+				scope.queue[ j ].src = j;
+				break;
+			}
+
+		} );
+		this.queue[ url ] = img;
+		if( Object.keys( this.queue ).length === 1 ) img.src = url;
+
+		return texture;
 
 	}
 
-	function init() {
+};
 
-		document.getElementById( 'headphones' ).style.opacity = 1;
 
-		if( hashOptions.dof != undefined ) dof = hashOptions.dof;
+function init() {
 
-		scene = new THREE.Scene();
-		var aspectRatio = window.innerWidth / window.innerHeight;
-		camera = new THREE.PerspectiveCamera( 45, aspectRatio, .01, 30 );
-		camera.target = new THREE.Vector3();
+	scene = new THREE.Scene();
+	var aspectRatio = window.innerWidth / window.innerHeight;
+	camera = new THREE.PerspectiveCamera( 75, aspectRatio, .01, 30 );
+	camera.target = new THREE.Vector3();
+	user.add( camera );
+	scene.add( user );
 
-		if( manual ) {
-			controls = new THREE.OrbitControls( camera );
-			controls.damping = 0.2;
-		}
+	renderer = new THREE.WebGLRenderer( { antialias: true });
+	document.body.appendChild( renderer.domElement );
+	var pixelRatioScale = isMobile?.5:1;
+	if( hashOptions.scale != undefined ) pixelRatioScale = hashOptions.scale?.5:1;
+	renderer.setPixelRatio( pixelRatioScale * window.devicePixelRatio );
+	renderer.setClearColor( 0xffffff );
+	var textureLOD = null;//renderer.context.getExtension( 'EXT_shader_texture_lod' );
 
-		renderer = new THREE.WebGLRenderer( { antialias: true, alpha: false });
-		document.body.appendChild( renderer.domElement );
-		var pixelRatioScale = isMobile?.5:1;
-		if( hashOptions.scale != undefined ) pixelRatioScale = hashOptions.scale?.5:1;
-		renderer.setPixelRatio( pixelRatioScale * window.devicePixelRatio );
-		renderer.setClearColor( 0xffffff, 1. );
-		renderer.autoClear = false;
+	effect = new THREE.VREffect( renderer );
+	controls = new THREE.VRControls( camera );
+	controls.standing = true;
+	effect.setSize( window.innerWidth, window.innerHeight );
 
-		equi = new THREE.CubemapToEquirectangular( renderer, true );
+	var params = {
+		FORCE_ENABLE_VR: true,
+		hideButton: false, // Default: false.
+		isUndistorted: false // Default: false.
+	};
+	manager = new WebVRManager(renderer, effect, params);
 
-		var textureLOD = null;//renderer.context.getExtension( 'EXT_shader_texture_lod' );
+	var fragmentPrefix = '';
+	if( textureLOD ) fragmentPrefix = '#define TEXTURELOD';
 
-		var fragmentPrefix = '';
-		if( textureLOD ) fragmentPrefix = '#define TEXTURELOD';
+	cubeCamera = new THREE.CubeCamera( .00000001, 30, 32 );
+	scene.add( cubeCamera );
 
-		composer = new WAGNER.Composer( renderer, { useRGBA: false } );
-		vignettePass = new WAGNER.Vignette2Pass();
-		vignettePass.params.reduction = 2;
-		FXAAPass = new WAGNER.FXAAPass();
-		var bufferSize = isMobile?256:512;
-		bloomPass = new WAGNER.MultiPassBloomPass( bufferSize, bufferSize );
-		bloomPass.params.blurAmount = isMobile?.5:1;
-		DOFPass = new WAGNER.DOFPass();
-		//DOFPass = new WAGNER.BokehPoisonPass();
-		noisePass = new WAGNER.NoisePass();
+	window.addEventListener( 'resize', onWindowResize );
+	window.addEventListener('vrdisplaypresentchange', function( e ) { console.log( e ); onWindowResize() }, true);
 
-		noisePass.params.amount = .01;
+	var diffuseTexture, normalTexture, specularTexture, displacementTexture;
+	var diffuseOrbTexture, normalOrbTexture, specularOrbTexture, lightOrbTexture;
 
-		rgbSplitPass = new WAGNER.RGBSplitPass();
-		rgbSplitPass.params.delta.set( pixelRatioScale * 20, pixelRatioScale * 20 );
+	onWindowResize();
 
-		bokehPass = new WAGNER.BokehPoisonPass();
+	function prepare() {
 
-		bleachPass = new WAGNER.BleachPass();
+		scene.add( roomModel );
 
-		DOFPass.params.aperture = .01;
+		diffuseTexture.anisotropy =
+		specularTexture.anisotropy =
+		normalTexture.anisotropy =
+		displacementTexture.anisotropy =
+		cubeCamera.renderTarget.texture.anisotropy =
+		normalOrbTexture.anisotropy =
+		renderer.getMaxAnisotropy();
 
-		cubeCamera = new THREE.CubeCamera( .00000001, 10, 1024 ); // parameters: near, far, resolution
-		cubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter; // mipmap filter
-		cubeCamera.position.set( 0, 0, 0 );
-		scene.add( cubeCamera );
-
-		window.addEventListener( 'resize', onWindowResize );
-
-		var sL = new ShaderLoader()
-		sL.add( 'depth-vs', 'bower_components/Wagner/vertex-shaders/packed-depth-vs.glsl' );
-		sL.add( 'depth-fs', 'bower_components/Wagner/fragment-shaders/packed-depth-fs.glsl' );
-		sL.load();
-		sL.onLoaded( function() {
-			depthMaterial = new THREE.ShaderMaterial( {
-				uniforms: {
-					mNear: { type: 'f', value: camera.near },
-					mFar: { type: 'f', value: camera.far }
-				},
-				vertexShader: this.get( 'depth-vs' ),
-				fragmentShader: this.get( 'depth-fs' ),
-				shading: THREE.SmoothShading
-			} );
+		shinyMaterial = new THREE.ShaderMaterial( {
+			uniforms: {
+				bumpiness: { type: 'f', value: 1 },
+				repeatUV: { type: 'v2', value: new THREE.Vector2( 1, 1 ) },
+				diffuseMap: { type: 't', value: diffuseTexture },
+				specularMap: { type: 't', value: specularTexture },
+				normalMap: { type: 't', value: normalTexture },
+				detailNormalMap: { type: 't', value: displacementTexture },
+				envMap: { type: 't', value: cubeCamera.renderTarget },
+				specular: { type: 'f', value: 0 },
+				roughness: { type: 'f', value: 2 },
+				cubeMapSize: { type: 'v3', value: new THREE.Vector3() },
+				rotMatrix: { type: 'm3', value: new THREE.Matrix3() }
+			},
+			vertexShader: document.getElementById( 'vertexShader' ).textContent,
+			fragmentShader: fragmentPrefix + document.getElementById( 'fragmentShader' ).textContent,
+			side: THREE.FrontSide
 		} );
 
-		var diffuseTexture, normalTexture, specularTexture, displacementTexture;
-		var diffuseOrbTexture, normalOrbTexture, specularOrbTexture, lightOrbTexture;
+		shinyMaterial.uniforms.normalMap.value.wrapS =
+		shinyMaterial.uniforms.normalMap.value.wrapT =
+		shinyMaterial.uniforms.detailNormalMap.value.wrapS =
+		shinyMaterial.uniforms.detailNormalMap.value.wrapT =
+		shinyMaterial.uniforms.diffuseMap.value.wrapS =
+		shinyMaterial.uniforms.diffuseMap.value.wrapT =
+		shinyMaterial.uniforms.specularMap.value.wrapS =
+		shinyMaterial.uniforms.specularMap.value.wrapT =
+		THREE.RepeatWrapping;
 
-		onWindowResize();
+		progressIndicator( 91 );
 
-		function prepare() {
+		baseMaterial = new THREE.MeshBasicMaterial( { map: diffuseTexture } );
+		var height = 4;
+		var scale = 1;
 
-			scene.add( roomModel );
+		roomModel.position.y = .5 * height;
+		cubeCamera.position.y = .5 * height;
 
-			shinyMaterial = new THREE.ShaderMaterial( {
-				uniforms: {
-					bumpiness: { type: 'f', value: 1 },
-					repeatUV: { type: 'v2', value: new THREE.Vector2( 1, 1 ) },
-					diffuseMap: { type: 't', value: diffuseTexture },
-					specularMap: { type: 't', value: specularTexture },
-					normalMap: { type: 't', value: normalTexture },
-					detailNormalMap: { type: 't', value: displacementTexture },
-					envMap: { type: 't', value: cubeCamera.renderTarget },
-					specular: { type: 'f', value: 0 },
-					roughness: { type: 'f', value: 2 },
-					cubeMapSize: { type: 'v3', value: new THREE.Vector3() }
-				},
-				vertexShader: document.getElementById( 'vertexShader' ).textContent,
-				fragmentShader: fragmentPrefix + document.getElementById( 'fragmentShader' ).textContent,
-				side: THREE.FrontSide
-			} );
-
-			shinyMaterial.uniforms.normalMap.value.wrapS =
-			shinyMaterial.uniforms.normalMap.value.wrapT =
-			shinyMaterial.uniforms.detailNormalMap.value.wrapS =
-			shinyMaterial.uniforms.detailNormalMap.value.wrapT =
-			shinyMaterial.uniforms.diffuseMap.value.wrapS =
-			shinyMaterial.uniforms.diffuseMap.value.wrapT =
-			shinyMaterial.uniforms.specularMap.value.wrapS =
-			shinyMaterial.uniforms.specularMap.value.wrapT =
-			THREE.RepeatWrapping;
-
-			progressIndicator( 91 );
-
-			baseMaterial = new THREE.MeshBasicMaterial( { map: diffuseTexture } );
-			var height = 4;
-
-			roomModel.children.forEach( function( e ) {
-				e.geometry.center();
-
-				var indices_array = [];
-				for( var j = 0; j < e.geometry.attributes.position.array.length / 3; j++ ){
-					indices_array.push( j );
-				}
-
-				e.geometry.setIndex( new THREE.BufferAttribute( new Uint16Array( indices_array ), 1 ) );
-
-				THREE.BufferGeometryUtils.computeTangents( e.geometry );
-				var t = e.geometry.boundingBox.max.clone();
-				t.sub( e.geometry.boundingBox.min );
-				scale = height / t.y;
-
-				e.scale.set( scale, scale, scale );
-				e.material = shinyMaterial;
-				t.multiply( e.scale );
-				e.material.uniforms.cubeMapSize.value.copy( t )
-			} );
-
-			progressIndicator( 92 );
-
-			var m = new THREE.ShaderMaterial( {
-				uniforms: {
-					bumpiness: { type: 'f', value: 1 },
-					repeatUV: { type: 'v2', value: new THREE.Vector2( 1, 1 ) },
-					normalMap: { type: 't', value: normalOrbTexture },
-					detailNormalMap: { type: 't', value: displacementTexture },
-					envMap: { type: 't', value: cubeCamera.renderTarget }
-				},
-				vertexShader: document.getElementById( 'vertexShader' ).textContent,
-				fragmentShader: fragmentPrefix + document.getElementById( 'fragment2Shader' ).textContent,
-				side: THREE.DoubleSide
-			} );
-
-			m.uniforms.normalMap.value.wrapS =
-			m.uniforms.normalMap.value.wrapT =
-			m.uniforms.detailNormalMap.value.wrapS =
-			m.uniforms.detailNormalMap.value.wrapT =
-			THREE.RepeatWrapping;
-
-			progressIndicator( 93 );
-
-			var geometry = cubeModel.children[ 0 ].geometry;
+		roomModel.children.forEach( function( e ) {
+			e.geometry.center();
 
 			var indices_array = [];
-			for( var j = 0; j < geometry.attributes.position.array.length / 3; j++ ){
+			for( var j = 0; j < e.geometry.attributes.position.array.length / 3; j++ ){
 				indices_array.push( j );
 			}
 
-			geometry.setIndex( new THREE.BufferAttribute( new Uint16Array( indices_array ), 1 ) );
+			e.geometry.setIndex( new THREE.BufferAttribute( new Uint16Array( indices_array ), 1 ) );
 
-			//geometry.computeFaceNormals();
-			//geometry.computeVertexNormals();
-			THREE.BufferGeometryUtils.computeTangents( geometry );
-			geometry.center();
-
-			progressIndicator( 94 );
-
-			sphere = new THREE.Mesh( geometry, m );
-			scene.add( sphere );
-			sphere.position.x = -4 * scale;
-			sphere.scale.set( .25 * scale, .25 * scale, .25 * scale );
-
-			progressIndicator( 95 );
-
-			camera.position.set( 8.48048079936136, -2.086495492733194, 0.3702657880176793 );
-			camera.position.multiplyScalar( scale );
-			camera.lookAt( sphere.position );
-
-			ready();
-		}
-
-		function ready() {
-
-			scene.overrideMaterial = baseMaterial;
-			sphere.visible = false;
-			cubeCamera.updateCubeMap( renderer, scene );
-			scene.overrideMaterial = null;
-			cubeMapGenerated = true;
-			sphere.visible = true;
-
-			progressIndicator( 96 );
-
-			renderer.domElement.style.display = 'none';
-			renderer.render(scene, camera );
-			renderer.setClearColor( 0, 1. );
-			renderer.clear();
-			renderer.setClearColor( 0xffffff, 1. );
-			renderer.domElement.style.display = 'block';
-
-			progressIndicator( 100 );
-
-			function startAudio() {
-
-				tapToStart.removeEventListener( 'click', startAudio );
-				tapToStart.classList.add( 'hidden' );
-
-				audio.addEventListener( 'canplay', function() {
-					startTime = Date.now();
-					if( !manual ) audio.play();
-					startRendering();
-				} )
-				if( !useAudio ) audio.volume = 0;
-				audio.preload = 'auto';
-				audio.autoplay = false;
-				audio.src = 'assets/track.mp3';
-				audio.play();
-
-			}
-
-			if( isMobile ) {
-				tapToStart.classList.remove( 'hidden' );
-				tapToStart.addEventListener( 'click', startAudio );
-			} else {
-				startAudio();
-			}
-
-			document.getElementById( 'progress' ).style.opacity = 0;
-
-		}
-
-		function startRendering() {
-
-			( function attachInteractiveModeTrigger() {
-				var count = 0;
-				document.body.addEventListener( 'click', function() {
-					count++;
-					if( count == 3 ) goInteractive();
-				} );
-				document.body.addEventListener( 'touchend', function() {
-					count++;
-					if( count == 3 ) goInteractive();
-				} );
-			} )();
-
-			document.getElementById( 'headphones' ).style.opacity = 0;
-			setTimeout( render, 1000 );
-
-		}
-
-		window.addEventListener( 'keydown', function( e ) {
-
-			if( e.keyCode === 32 ) {
-				renderer.setClearColor( 0xffffff, 1. );
-				equi.update( camera, scene );
-			}
-
+			THREE.BufferGeometryUtils.computeTangents( e.geometry );
+			var t = e.geometry.boundingBox.max.clone();
+			t.sub( e.geometry.boundingBox.min );
+			scale = height / t.y;
+			console.log( height, t.y, scale );
+			e.scale.set( scale, scale, scale );
+			e.material = shinyMaterial;
+			t.multiply( e.scale );
+			e.material.uniforms.cubeMapSize.value.copy( t )
 		} );
 
+		progressIndicator( 92 );
 
-		var l = new THREE.LoadingManager(
-			function() { console.log( 'onLoad' ); prepare(); },
-			function( item, loaded, total ) {
-				progressIndicator( loaded * 90 / total )
+		var m = new THREE.ShaderMaterial( {
+			uniforms: {
+				bumpiness: { type: 'f', value: 1 },
+				repeatUV: { type: 'v2', value: new THREE.Vector2( 1, 1 ) },
+				normalMap: { type: 't', value: normalOrbTexture },
+				detailNormalMap: { type: 't', value: displacementTexture },
+				envMap: { type: 't', value: cubeCamera.renderTarget },
+				cubeMapSize: { type: 'v3', value: new THREE.Vector3() },
+				rotMatrix: { type: 'm3', value: new THREE.Matrix3() }
 			},
-			function() { console.log( 'onError' ) }
-			);
-		var t = new THREE.TextureLoader( l );
+			vertexShader: document.getElementById( 'vertexShader' ).textContent,
+			fragmentShader: fragmentPrefix + document.getElementById( 'fragment2Shader' ).textContent,
+			side: THREE.DoubleSide
+		} );
 
-		var res = '4096';
-		t.load( 'assets/baked_' + res + '.jpg', function( t ) { diffuseTexture = t; } );
-		t.load( 'assets/spec_' + res + '.jpg', function( t ) { specularTexture = t; } );
-		t.load( 'assets/norm_' + res + '.jpg', function( t ) { normalTexture = t; } );
+		m.uniforms.normalMap.value.wrapS =
+		m.uniforms.normalMap.value.wrapT =
+		m.uniforms.detailNormalMap.value.wrapS =
+		m.uniforms.detailNormalMap.value.wrapT =
+		THREE.RepeatWrapping;
 
-		t.load( 'assets/displacement.jpg', function( t ) { displacementTexture = t; } );
+		m.uniforms.cubeMapSize.value.copy( shinyMaterial.uniforms.cubeMapSize.value )
 
-		t.load( 'assets/orb-norm.png', function( t ) { normalOrbTexture = t; } );
+		progressIndicator( 93 );
 
-		var m = new THREE.OBJLoader( l );
-		m.load( 'assets/hall.obj', function( m ) { roomModel = m; } );
-		m.load( 'assets/orb.obj', function( m ) { cubeModel = m; } );
+		var geometry = cubeModel.children[ 0 ].geometry;
+
+		var indices_array = [];
+		for( var j = 0; j < geometry.attributes.position.array.length / 3; j++ ){
+			indices_array.push( j );
+		}
+
+		geometry.setIndex( new THREE.BufferAttribute( new Uint16Array( indices_array ), 1 ) );
+
+		THREE.BufferGeometryUtils.computeTangents( geometry );
+		geometry.center();
+
+		progressIndicator( 94 );
+
+//		var geometry = new THREE.TorusKnotGeometry( 10, 3, 200, 32 );
+
+		sphere = new THREE.Mesh( geometry, m );
+		scene.add( sphere );
+		sphere.position.x = -.5;
+		sphere.position.y = 1.5;
+		scale *= .125;
+		sphere.scale.set( scale, scale, scale );
+
+		addMetaballs();
+
+		metaballs.material.uniforms.cubeMapSize.value.copy( shinyMaterial.uniforms.cubeMapSize.value )
+
+		progressIndicator( 95 );
+
+		ready();
+	}
+
+	function ready() {
+
+		scene.overrideMaterial = baseMaterial;
+		sphere.visible = false;
+		metaballs.visible = false;
+		cubeCamera.updateCubeMap( renderer, scene );
+		scene.overrideMaterial = null;
+		cubeMapGenerated = true;
+		sphere.visible = true;
+		metaballs.visible = true;
+
+		progressIndicator( 96 );
+
+		renderer.domElement.style.display = 'none';
+		renderer.render(scene, camera );
+		renderer.setClearColor( 0 );
+		renderer.clear();
+		renderer.setClearColor( 0xffffff );
+		renderer.domElement.style.display = 'block';
+
+		progressIndicator( 100 );
+
+		startTime = Date.now();
+		startRendering();
+
+		document.getElementById( 'progress' ).style.opacity = 0;
 
 	}
 
-	function updateStory( t ) {
+	function startRendering() {
 
-		camera.position.x = averageData( storyline, t, 'x' ) * scale;
-		camera.position.y = averageData( storyline, t, 'y' ) * scale;
-		camera.position.z = averageData( storyline, t, 'z' ) * scale;
-
-		camera.target.x = averageData( storyline, t, 'targetx' ) * scale;
-		camera.target.y = averageData( storyline, t, 'targety' ) * scale;
-		camera.target.z = averageData( storyline, t, 'targetz' ) * scale;
-
-		camera.lookAt( camera.target );
-
-		//vignettePass.params.reduction = 3 + ( 10 - 10 * averageData( storyline, t, 'fade' ) );
-		vignettePass.params.boost = 2 * averageData( storyline, t, 'fade' );
-		vignettePass.params.boost += .2 * iNoise.noise( t, .234234, .565 );
-
-		var s = .2 * averageData( storyline, t, 'sphere' ) * scale;
-		sphere.scale.set( s, s, s );
-		sphere.visible = s > .001;
-
-		sphere.position.x = averageData( storyline, t, 'orbx' ) * scale;
-
-		sphere.rotation.y = averageData( storyline, t, 'sphereAngle' );
-
-		intro.style.opacity = averageData( storyline, t, 'text' );
-		credits.style.opacity = averageData( storyline, t, 'credits' );
-
-		var fov = averageData( storyline, t, 'fov' );
-		if( fov != camera.fov ) {
-			camera.fov = fov;
-			camera.updateProjectionMatrix();
-		}
-
-		DOFPass.params.aperture = averageData( storyline, t, 'aperture' ) * scale;
-		DOFPass.params.autofocus = averageData( storyline, t, 'autofocus' );
-		DOFPass.params.fD = averageData( storyline, t, 'focalDistance' );
-
-		if( t > 120 ) credits.style.pointerEvents = 'auto';
+		setTimeout( render, 1000 );
 
 	}
 
-	function render() {
-
-		requestAnimationFrame(render);
-
-		if( !manual ){
-			var t = .001 * ( Date.now() - startTime );
-			if( useAudio ) t = audio.currentTime;
-			updateStory( t );
+	window.addEventListener( 'keydown', function( e ) {
+		if( e.keyCode == 77 ) {
+			showMetaballs = !showMetaballs;
 		}
+	} )
 
-		if( hashOptions.post == false ) {
-			renderer.setClearColor( 0xffffff );
-			renderer.render( scene, camera );
-			return;
-		}
+	var l = new THREE.LoadingManager(
+		function() { console.log( 'onLoad' ); prepare(); },
+		function( item, loaded, total ) {
+			progressIndicator( loaded * 90 / total )
+		},
+		function() { console.log( 'onError' ) }
+		);
+	var t = new FixLoader( l );//THREE.TextureLoader( l );
 
-		composer.reset();
+	var res = '4096';
+	diffuseTexture = t.load( 'assets/baked_' + res + '.jpg' );
+	specularTexture = t.load( 'assets/spec_' + res + '.jpg' );
+	normalTexture = t.load( 'assets/norm_' + res + '.jpg' );
 
-		if( ( dof && DOFPass.params.aperture > 0 ) || bokeh ) {
-			scene.overrideMaterial = depthMaterial;
-			composer.render( scene, camera, null, depthTexture );
-			DOFPass.params.tBias = depthTexture;
-			bokehPass.params.tBias = depthTexture;
+	displacementTexture = t.load( 'assets/displacement.jpg' );
 
-			scene.overrideMaterial = null;
-			composer.render( scene, camera );
-		} else {
-			composer.render( scene, camera );
-		}
+	normalOrbTexture = t.load( 'assets/orb-norm.png' );
 
-		if( vignette ) composer.pass( vignettePass );
+	var m = new THREE.OBJLoader( l );
+	m.load( 'assets/hall.obj', function( m ) { roomModel = m; } );
+	m.load( 'assets/orb.obj', function( m ) { cubeModel = m; } );
 
-		if( rgbSplit ) composer.pass( rgbSplitPass );
+}
 
-		if( ( dof && DOFPass.params.aperture > 0 ) ) {
-			if( DOFPass.params.autofocus ) {
-				raycaster.setFromCamera( centerVector, camera );
-				var intersects = raycaster.intersectObjects( [ sphere, roomModel ], true );
-				if( intersects.length ) {
-					DOFPass.params.focalDistance = 1 - intersects[ 0 ].distance / ( camera.far - camera.near );
-				}
-			} else {
-				DOFPass.params.focalDistance = DOFPass.params.fD;
-			}
-			composer.pass( DOFPass );
-		}
+function render( timestamp ) {
 
-		if( bloom ) composer.pass( bloomPass );
-
-		if( fxaa ) composer.pass( FXAAPass );
-
-		if( bokeh ) composer.pass( bokehPass );
-
-		if( bleach ) composer.pass( bleachPass );
-
-		if( noise ) composer.pass( noisePass );
-
-		composer.toScreen();
-
+	if( showMetaballs ) {
+		metaballs.visible = true;
+		updateCubes( metaballs, .0005 * timestamp, numBlobs );
+	} else {
+		metaballs.visible = false;
 	}
 
-	function onWindowResize() {
+	sphere.rotation.y += .01;
+	sphere.position.x = 4 * Math.cos( .0001 * timestamp );
+	sphere.position.y = 2 + 1 * Math.cos( .00011 * timestamp );
 
-		renderer.setSize( window.innerWidth, window.innerHeight );
-		camera.aspect = window.innerWidth / window.innerHeight;
-		camera.updateProjectionMatrix();
+	controls.update();
 
-		composer.setSize( renderer.domElement.width, renderer.domElement.height );
-		depthTexture = WAGNER.Pass.prototype.getOfflineTexture( composer.width, composer.height, false );
+	var viewInv = new THREE.Matrix4().getInverse( sphere.matrixWorld );
+	var e = viewInv.elements;
+	var viewRot = new THREE.Matrix3().set( e[0],e[1],e[2], e[4],e[5],e[6], e[8],e[9],e[10] );
 
-	}
+	roomModel.children[ 0 ].material.uniforms.rotMatrix.value.identity();
+	sphere.material.uniforms.rotMatrix.value.copy( viewRot );
 
-	window.addEventListener( 'load', selectQuality );
+	manager.render( scene, camera, timestamp, function() {
+
+	} );
+
+	requestAnimationFrame(render);
+
+}
+
+function onWindowResize() {
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	effect.setSize( window.innerWidth, window.innerHeight );
+
+}
+
+document.getElementById( 'startBtn' ).addEventListener( 'click', function( e ) {
+	document.getElementById( 'selection' ).style.display = 'none'
+	init()
+	e.preventDefault()
+} );
 
 </script>
 </body>
 </html>
-<script src="//cdn.webglstats.com/stat.js" defer="defer" async="async"></script>
