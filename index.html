@@ -8,10 +8,10 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
 	<meta property="og:url" content="http://www.clicktorelease.com/code/cruciform"/>
-	
-	<meta property="og:title" content="cru·ci·form"/> 
-	<meta property="og:description" content="A study in architectural visualisation"/> 
-	<meta property="og:image" content="http://www.clicktorelease.com/code/cruciform/thumb.jpg"/> 
+
+	<meta property="og:title" content="cru·ci·form"/>
+	<meta property="og:description" content="A study in architectural visualisation"/>
+	<meta property="og:image" content="http://www.clicktorelease.com/code/cruciform/thumb.jpg"/>
 	<meta name="description" content="A study in architectural visualisation">
 	<meta itemprop="name" content="cru·ci·form">
 	<meta itemprop="description" content="A study in architectural visualisation">
@@ -55,7 +55,7 @@
 			#block li span{display: block;}
 			#block li span:nth-child(2){ margin-left: .6em;}
 		}
-		
+
 
 	</style>
 </head>
@@ -111,6 +111,7 @@
 <script src="bower_components/Wagner/ShaderLoader.js"></script>
 <script src="js/timeline.js"></script>
 <script src="js/storyboard.js"></script>
+<script src="js/CubemapToEquirectangular.js"></script>
 
 <script type="x-shader/x-vertex" id="vertexShader">
 
@@ -125,17 +126,17 @@ mat3 m3( mat4 mIn ) {
 
 	mat3 mOut;
 
-	mOut[ 0 ][ 0 ] = mIn[ 0 ][ 0 ]; 
-	mOut[ 0 ][ 1 ] = mIn[ 0 ][ 1 ]; 
-	mOut[ 0 ][ 2 ] = mIn[ 0 ][ 2 ]; 
+	mOut[ 0 ][ 0 ] = mIn[ 0 ][ 0 ];
+	mOut[ 0 ][ 1 ] = mIn[ 0 ][ 1 ];
+	mOut[ 0 ][ 2 ] = mIn[ 0 ][ 2 ];
 
-	mOut[ 1 ][ 0 ] = mIn[ 1 ][ 0 ]; 
-	mOut[ 1 ][ 1 ] = mIn[ 1 ][ 1 ]; 
-	mOut[ 1 ][ 2 ] = mIn[ 1 ][ 2 ]; 
+	mOut[ 1 ][ 0 ] = mIn[ 1 ][ 0 ];
+	mOut[ 1 ][ 1 ] = mIn[ 1 ][ 1 ];
+	mOut[ 1 ][ 2 ] = mIn[ 1 ][ 2 ];
 
-	mOut[ 2 ][ 0 ] = mIn[ 2 ][ 0 ]; 
-	mOut[ 2 ][ 1 ] = mIn[ 2 ][ 1 ]; 
-	mOut[ 2 ][ 2 ] = mIn[ 2 ][ 2 ]; 
+	mOut[ 2 ][ 0 ] = mIn[ 2 ][ 0 ];
+	mOut[ 2 ][ 1 ] = mIn[ 2 ][ 1 ];
+	mOut[ 2 ][ 2 ] = mIn[ 2 ][ 2 ];
 
 	return mOut;
 }
@@ -143,12 +144,12 @@ mat3 m3( mat4 mIn ) {
 void main()  {
 
 	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-	pos = vec3(modelMatrix * vec4( position, 1. ) );  
+	pos = vec3(modelMatrix * vec4( position, 1. ) );
 
 	if( bumpiness != 0. ){
 		vec3 correctedTangent = m3( modelMatrix ) * tangent.xyz;
 		vec3 binormal = m3( modelMatrix ) * cross(normal, correctedTangent.xyz );
-		vec3 normal = m3( modelMatrix ) * normal; 
+		vec3 normal = m3( modelMatrix ) * normal;
 
 		tbnMatrix = mat3( normalize( correctedTangent ), normalize( binormal ), normalize( normal ) );
 	} else {
@@ -182,7 +183,7 @@ uniform float roughness;
 uniform vec3 cubeMapSize;
 //const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 6.32 );
 //const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 7.961074 );
-const vec3 cubeMapPos = vec3( 0, 0., 0 ); 
+const vec3 cubeMapPos = vec3( 0, 0., 0 );
 
 vec3 gamma(vec3 color){
 	return pow(color, vec3(1.0/2.0));
@@ -213,12 +214,12 @@ vec3 r( vec3 I, vec3 N ) {
 
 void main()  {
 
-	vec3 vVec = normalize( view );  
+	vec3 vVec = normalize( view );
 
 	vec4 bumpNormal;
 	vec3 nVec;
 
-	bumpNormal = mix( texture2D( normalMap, vUv ), texture2D( detailNormalMap, 50. * vUv ), .5 );  	
+	bumpNormal = mix( texture2D( normalMap, vUv ), texture2D( detailNormalMap, 50. * vUv ), .5 );
 	vec3 n = bumpNormal.rgb * 2.0 - 1.0;
 	vec3 modifiedTangent = normalize( vec3( n.xy * bumpiness, sqrt( 1. - n.y * n.y - n.x * n.x ) ) );
 	nVec = tbnMatrix * modifiedTangent;
@@ -235,7 +236,7 @@ void main()  {
 	vec3 diffuse = texture2D( diffuseMap, vUv ).rgb;
 	vec3 specular = texture2D( specularMap, vUv ).rgb;
 	float r = clamp( specular.r + .2 * rim, 0., 1. );
-	vec3 base = mix( diffuse, env, r );			
+	vec3 base = mix( diffuse, env, r );
 
 	gl_FragColor = vec4( base, 1. );
 
@@ -261,7 +262,7 @@ uniform float roughness;
 
 const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 6.32 );
 //const vec3 cubeMapSize = vec3( 24.557362, 8.410262, 7.961074 );
-const vec3 cubeMapPos = vec3( 0, 0., 0 ); 
+const vec3 cubeMapPos = vec3( 0, 0., 0 );
 
 vec3 gamma(vec3 color){
 	return pow(color, vec3(1.0/2.0));
@@ -286,12 +287,12 @@ vec3 parallaxCorrectNormal( vec3 v, vec3 cubeSize, vec3 cubePos ) {
 
 void main()  {
 
-	vec3 vVec = normalize( view );  
+	vec3 vVec = normalize( view );
 
 	vec4 bumpNormal;
 	vec3 nVec;
 
-	bumpNormal = mix( texture2D( normalMap, vUv ), texture2D( detailNormalMap, 50. * vUv ), .5 );  	
+	bumpNormal = mix( texture2D( normalMap, vUv ), texture2D( detailNormalMap, 50. * vUv ), .5 );
 	vec3 n = bumpNormal.rgb * 2.0 - 1.0;
 	vec3 modifiedTangent = normalize( vec3( n.xy * bumpiness, sqrt( 1. - n.y * n.y - n.x * n.x ) ) );
 	nVec = tbnMatrix * modifiedTangent;
@@ -329,10 +330,11 @@ void main()  {
 
 	var scene, camera, controls, renderer, cubeCamera, cubeMapGenerated = false;
 	var sphere;
+	var equi;
 
 	var depthMaterial = new THREE.MeshBasicMaterial();
 
-	var dof = true, bloom = true, fxaa = true, vignette = true, bleach = true, 
+	var dof = true, bloom = true, fxaa = true, vignette = true, bleach = true,
 		lens = false, rgbSplit = true, bokeh = false, noise = true;
 
 	var startTime = Date.now();
@@ -382,7 +384,7 @@ void main()  {
 	var scale = 1;
 
 	var roomModel, cubeModel;
-	
+
 	var progressIndicator = ( function getProgressFn() {
 
 		var progress = document.getElementById( 'progress' );
@@ -403,8 +405,8 @@ void main()  {
 			var url = li.getAttribute( 'data-url' );
 			li.addEventListener( 'click', function( e ) {
 				var hashFields = url.split( '&' );
-				hashFields.forEach( function( e ) { 
-					var f = e.split( '=' ); 
+				hashFields.forEach( function( e ) {
+					var f = e.split( '=' );
 					var obj = {}
 					hashOptions[ f [ 0 ] ] = f[ 1 ] == 'true'?true:false;
 				} );
@@ -442,13 +444,16 @@ void main()  {
 			controls.damping = 0.2;
 		}
 
-		renderer = new THREE.WebGLRenderer( { antialias: true });
+		renderer = new THREE.WebGLRenderer( { antialias: true, alpha: false });
 		document.body.appendChild( renderer.domElement );
 		var pixelRatioScale = isMobile?.5:1;
 		if( hashOptions.scale != undefined ) pixelRatioScale = hashOptions.scale?.5:1;
 		renderer.setPixelRatio( pixelRatioScale * window.devicePixelRatio );
-		renderer.setClearColor( 0xffffff );
+		renderer.setClearColor( 0xffffff, 1. );
 		renderer.autoClear = false;
+
+		equi = new THREE.CubemapToEquirectangular( renderer, true );
+
 		var textureLOD = null;//renderer.context.getExtension( 'EXT_shader_texture_lod' );
 
 		var fragmentPrefix = '';
@@ -466,7 +471,7 @@ void main()  {
 		noisePass = new WAGNER.NoisePass();
 
 		noisePass.params.amount = .01;
-		
+
 		rgbSplitPass = new WAGNER.RGBSplitPass();
 		rgbSplitPass.params.delta.set( pixelRatioScale * 20, pixelRatioScale * 20 );
 
@@ -507,7 +512,7 @@ void main()  {
 		function prepare() {
 
 			scene.add( roomModel );
-			
+
 			shinyMaterial = new THREE.ShaderMaterial( {
 				uniforms: {
 					bumpiness: { type: 'f', value: 1 },
@@ -526,13 +531,13 @@ void main()  {
 				side: THREE.FrontSide
 			} );
 
-			shinyMaterial.uniforms.normalMap.value.wrapS = 
+			shinyMaterial.uniforms.normalMap.value.wrapS =
 			shinyMaterial.uniforms.normalMap.value.wrapT =
-			shinyMaterial.uniforms.detailNormalMap.value.wrapS = 
+			shinyMaterial.uniforms.detailNormalMap.value.wrapS =
 			shinyMaterial.uniforms.detailNormalMap.value.wrapT =
-			shinyMaterial.uniforms.diffuseMap.value.wrapS = 
+			shinyMaterial.uniforms.diffuseMap.value.wrapS =
 			shinyMaterial.uniforms.diffuseMap.value.wrapT =
-			shinyMaterial.uniforms.specularMap.value.wrapS = 
+			shinyMaterial.uniforms.specularMap.value.wrapS =
 			shinyMaterial.uniforms.specularMap.value.wrapT =
 			THREE.RepeatWrapping;
 
@@ -555,7 +560,7 @@ void main()  {
 				var t = e.geometry.boundingBox.max.clone();
 				t.sub( e.geometry.boundingBox.min );
 				scale = height / t.y;
-				
+
 				e.scale.set( scale, scale, scale );
 				e.material = shinyMaterial;
 				t.multiply( e.scale );
@@ -577,16 +582,16 @@ void main()  {
 				side: THREE.DoubleSide
 			} );
 
-			m.uniforms.normalMap.value.wrapS = 
+			m.uniforms.normalMap.value.wrapS =
 			m.uniforms.normalMap.value.wrapT =
-			m.uniforms.detailNormalMap.value.wrapS = 
+			m.uniforms.detailNormalMap.value.wrapS =
 			m.uniforms.detailNormalMap.value.wrapT =
 			THREE.RepeatWrapping;
 
 			progressIndicator( 93 );
 
 			var geometry = cubeModel.children[ 0 ].geometry;
-			
+
 			var indices_array = [];
 			for( var j = 0; j < geometry.attributes.position.array.length / 3; j++ ){
 				indices_array.push( j );
@@ -628,9 +633,9 @@ void main()  {
 
 			renderer.domElement.style.display = 'none';
 			renderer.render(scene, camera );
-			renderer.setClearColor( 0 );
+			renderer.setClearColor( 0, 1. );
 			renderer.clear();
-			renderer.setClearColor( 0xffffff );
+			renderer.setClearColor( 0xffffff, 1. );
 			renderer.domElement.style.display = 'block';
 
 			progressIndicator( 100 );
@@ -684,18 +689,21 @@ void main()  {
 		}
 
 		window.addEventListener( 'keydown', function( e ) {
-			/*if( e.keyCode == 32 ) {
-				startTime = Date.now();
-				audio.currentTime = 0;
-			}*/
-		} )
 
-		var l = new THREE.LoadingManager( 
-			function() { console.log( 'onLoad' ); prepare(); }, 
-			function( item, loaded, total ) { 
-				progressIndicator( loaded * 90 / total ) 
+			if( e.keyCode === 32 ) {
+				renderer.setClearColor( 0xffffff, 1. );
+				equi.update( camera, scene );
+			}
+
+		} );
+
+
+		var l = new THREE.LoadingManager(
+			function() { console.log( 'onLoad' ); prepare(); },
+			function( item, loaded, total ) {
+				progressIndicator( loaded * 90 / total )
 			},
-			function() { console.log( 'onError' ) } 
+			function() { console.log( 'onError' ) }
 			);
 		var t = new THREE.TextureLoader( l );
 
@@ -786,7 +794,7 @@ void main()  {
 		}
 
 		if( vignette ) composer.pass( vignettePass );
-		
+
 		if( rgbSplit ) composer.pass( rgbSplitPass );
 
 		if( ( dof && DOFPass.params.aperture > 0 ) ) {
