@@ -111,7 +111,6 @@
 <script src="bower_components/Wagner/ShaderLoader.js"></script>
 <script src="js/timeline.js"></script>
 <script src="js/storyboard.js"></script>
-<script src="js/CubemapToEquirectangular.js"></script>
 
 <script type="x-shader/x-vertex" id="vertexShader">
 
@@ -330,7 +329,6 @@ void main()  {
 
 	var scene, camera, controls, renderer, cubeCamera, cubeMapGenerated = false;
 	var sphere;
-	var equi;
 
 	var depthMaterial = new THREE.MeshBasicMaterial();
 
@@ -451,8 +449,6 @@ void main()  {
 		renderer.setPixelRatio( pixelRatioScale * window.devicePixelRatio );
 		renderer.setClearColor( 0xffffff, 1. );
 		renderer.autoClear = false;
-
-		equi = new THREE.CubemapToEquirectangular( renderer, true );
 
 		var textureLOD = null;//renderer.context.getExtension( 'EXT_shader_texture_lod' );
 
@@ -687,16 +683,6 @@ void main()  {
 			setTimeout( render, 1000 );
 
 		}
-
-		window.addEventListener( 'keydown', function( e ) {
-
-			if( e.keyCode === 32 ) {
-				renderer.setClearColor( 0xffffff, 1. );
-				equi.update( camera, scene );
-			}
-
-		} );
-
 
 		var l = new THREE.LoadingManager(
 			function() { console.log( 'onLoad' ); prepare(); },
