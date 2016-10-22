@@ -4,7 +4,7 @@ var ACTIONS = {
 	LINEAR: 2
 }
 
-function Event() {
+function TimelineEvent() {
 	this.start = null;
 	this.end = null;
 	this.action = null;
@@ -24,7 +24,7 @@ function parseStoryline( story ) {
 
 			story[ v ].forEach( function( e ) {
 				var start = e.match( /([^\s]+)/ );
-				var event = new Event();
+				var event = new TimelineEvent();
 				if( e.indexOf( 'cut to' ) != -1 ) {
 					event.start = parseFloat( start[ 1 ] );
 					event.action = ACTIONS.CUT;
@@ -78,9 +78,9 @@ function parseStoryline( story ) {
 	return result;
 
 }
-	
+
 function getPointInStoryline( storyline, t, value ) {
-	
+
 	if( !storyline[ value ] ) return null;
 
 	for( var j = 0; j < storyline[ value ].length; j++ ) {
@@ -111,7 +111,7 @@ function averageData( story, t, value ) {
 	}
 
 	if( p.action === ACTIONS.EASE ) {
-	
+
 		var et = ( t - p.start ) / p.duration;
 		et = Math.max( Math.min( et, 1 ), 0 );
 		var easing;
@@ -125,7 +125,7 @@ function averageData( story, t, value ) {
 	}
 
 	if( p.action === ACTIONS.LINEAR ) {
-	
+
 		var et = ( t - p.start ) / p.duration;
 		et = Math.max( Math.min( et, 1 ), 0 );
 		var v = p.from + ( et * ( p.to - p.from ) );
