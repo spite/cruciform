@@ -430,13 +430,10 @@ for( var j = 0; j < links.length; j++ ) {
 	}, false );
 }
 
-WebVRConfig = {
-	//BUFFER_SCALE: 0.5,
-};
+var vrDisplay;
 
-var effect, controls, manager;
+var effect, controls;
 var user = new THREE.Object3D();
-user.position.x = 1
 
 var scene, camera, controls, renderer, cubeCamera, cubeMapGenerated = false;
 var sphere;
@@ -536,7 +533,6 @@ function init() {
 	scene = new THREE.Scene();
 	var aspectRatio = window.innerWidth / window.innerHeight;
 	camera = new THREE.PerspectiveCamera( 75, aspectRatio, .01, 30 );
-	camera.target = new THREE.Vector3();
 	user.add( camera );
 	scene.add( user );
 
@@ -548,17 +544,36 @@ function init() {
 	renderer.setClearColor( 0xffffff );
 	var textureLOD = null;//renderer.context.getExtension( 'EXT_shader_texture_lod' );
 
-	effect = new THREE.VREffect( renderer );
-	controls = new THREE.VRControls( camera );
-	controls.standing = true;
-	effect.setSize( window.innerWidth, window.innerHeight );
+	if( 'getVRDisplays' in navigator ) {
 
-	var params = {
-		FORCE_ENABLE_VR: true,
-		hideButton: false, // Default: false.
-		isUndistorted: false // Default: false.
-	};
-	manager = new WebVRManager(renderer, effect, params);
+		navigator.getVRDisplays().then(function(displays) {
+			if (displays.length > 0) {
+				vrDisplay = displays[0];
+				effect = new THREE.VREffect( renderer );
+				effect.setVRDisplay( vrDisplay );
+				controls = new THREE.VRControls( camera );
+				controls.standing = true;
+				controls.setVRDisplay( vrDisplay );
+				if (vrDisplay.stageParameters) {
+					//setStageDimensions(vrDisplay.stageParameters);
+				}
+				document.body.appendChild( WEBVR.getButton( effect ) );
+			}
+		});
+
+	} else {
+
+		user.position.y = 1.6;
+		camera.position.set( -.1, 0, 0 );
+		camera.lookAt( new THREE.Vector3( 0, 0, -2 ) );
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		effect = {
+			setSize: function( w, h ) { renderer.setSize( w, h ) },
+			requestAnimationFrame: function( c ) { requestAnimationFrame( c ) },
+			render: function( s, c ) { renderer.render( s, c ); }
+		}
+
+	}
 
 	var fragmentPrefix = '';
 	if( textureLOD ) fragmentPrefix = '#define TEXTURELOD';
@@ -571,8 +586,6 @@ function init() {
 
 	var diffuseTexture, normalTexture, specularTexture, displacementTexture;
 	var diffuseOrbTexture, normalOrbTexture, specularOrbTexture, lightOrbTexture;
-
-	onWindowResize();
 
 	function prepare() {
 
@@ -735,7 +748,8 @@ function init() {
 
 	function startRendering() {
 
-		setTimeout( render, 1000 );
+		onWindowResize();
+		effect.requestAnimationFrame( render );
 
 	}
 
@@ -791,21 +805,16 @@ function render( timestamp ) {
 	roomModel.children[ 0 ].material.uniforms.rotMatrix.value.identity();
 	sphere.material.uniforms.rotMatrix.value.copy( viewRot );
 
-	manager.render( scene, camera, timestamp, function() {
-
-	} );
-
-	requestAnimationFrame(render);
+	effect.render( scene, camera );
+	effect.requestAnimationFrame( render );
 
 }
 
 function onWindowResize() {
 
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	effect.setSize(window.innerWidth, window.innerHeight);
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
-
-	effect.setSize( window.innerWidth, window.innerHeight );
 
 }
 
