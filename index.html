@@ -497,8 +497,8 @@ function addMetaballs() {
 	var material = new THREE.ShaderMaterial( {
 
 		uniforms: {
-            textureMap: { type: 't', value: THREE.ImageUtils.loadTexture( 'assets/matcap.jpg' ) },
-            normalMap: { type: 't', value: THREE.ImageUtils.loadTexture( 'assets/carbon-fiber.jpg' ) },
+            textureMap: { type: 't', value: new THREE.TextureLoader().load( 'assets/matcap.jpg' ) },
+            normalMap: { type: 't', value: new THREE.TextureLoader().load( 'assets/carbon-fiber.jpg' ) },
             normalScale: { type: 'f', value: .1 },
             texScale: { type: 'f', value: 20 },
             envMap: { type: 't', value: cubeCamera.renderTarget },
@@ -530,56 +530,6 @@ function addMetaballs() {
 	updateCubes( metaballs, 0, numBlobs );
 
 }
-
-var FixLoader = function ( manager ) {
-
-	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
-	this.queue = {};
-
-};
-
-FixLoader.prototype = {
-
-	constructor: FixLoader,
-
-	load: function ( url, onLoad, onProgress, onError ) {
-
-		var texture = new THREE.Texture();
-		var scope = this;
-		scope.manager.itemStart( url );
-
-		var img = new Image();
-		img.addEventListener( 'load', function() {
-
-			texture.image = this;
-			texture.needsUpdate = true;
-
-			if ( onLoad !== undefined ) {
-
-				onLoad( texture );
-
-			}
-
-			if( onProgress ) onProgress();
-
-			scope.manager.itemEnd( url );
-
-			delete scope.queue[ url ];
-			for( var j in scope.queue ) {
-				scope.queue[ j ].src = j;
-				break;
-			}
-
-		} );
-		this.queue[ url ] = img;
-		if( Object.keys( this.queue ).length === 1 ) img.src = url;
-
-		return texture;
-
-	}
-
-};
-
 
 function init() {
 
@@ -802,7 +752,7 @@ function init() {
 		},
 		function() { console.log( 'onError' ) }
 		);
-	var t = new FixLoader( l );//THREE.TextureLoader( l );
+	var t = new THREE.TextureLoader( l );
 
 	var res = '4096';
 	diffuseTexture = t.load( 'assets/baked_' + res + '.jpg' );
