@@ -478,7 +478,7 @@ void main()  {
 		DOFPass.params.aperture = .01;
 
 		cubeCamera = new THREE.CubeCamera( .00000001, 10, 1024 ); // parameters: near, far, resolution
-		cubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter; // mipmap filter
+		cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter; // mipmap filter
 		cubeCamera.position.set( 0, 0, 0 );
 		scene.add( cubeCamera );
 
@@ -517,7 +517,7 @@ void main()  {
 					specularMap: { type: 't', value: specularTexture },
 					normalMap: { type: 't', value: normalTexture },
 					detailNormalMap: { type: 't', value: displacementTexture },
-					envMap: { type: 't', value: cubeCamera.renderTarget },
+					envMap: { type: 't', value: cubeCamera.renderTarget.texture },
 					specular: { type: 'f', value: 0 },
 					roughness: { type: 'f', value: 2 },
 					cubeMapSize: { type: 'v3', value: new THREE.Vector3() }
@@ -571,7 +571,7 @@ void main()  {
 					repeatUV: { type: 'v2', value: new THREE.Vector2( 1, 1 ) },
 					normalMap: { type: 't', value: normalOrbTexture },
 					detailNormalMap: { type: 't', value: displacementTexture },
-					envMap: { type: 't', value: cubeCamera.renderTarget }
+					envMap: { type: 't', value: cubeCamera.renderTarget.texture }
 				},
 				vertexShader: document.getElementById( 'vertexShader' ).textContent,
 				fragmentShader: fragmentPrefix + document.getElementById( 'fragment2Shader' ).textContent,
