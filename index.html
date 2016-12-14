@@ -531,6 +531,8 @@ function addMetaballs() {
 
 }
 
+var sounds = {};
+
 function init() {
 
 	scene = new THREE.Scene();
@@ -593,6 +595,7 @@ function init() {
 
 	function prepare() {
 
+		console.log( 'prepare' );
 		scene.add( roomModel );
 
 		diffuseTexture.anisotropy =
@@ -743,6 +746,8 @@ function init() {
 
 		progressIndicator( 100 );
 
+		sphere.add( sounds[ 'orb' ] );
+
 		startTime = Date.now();
 		startRendering();
 
@@ -752,6 +757,9 @@ function init() {
 
 	function startRendering() {
 
+		listener.setMasterVolume( 1 );
+
+		document.getElementById( 'selection' ).style.display = 'none'
 		onWindowResize();
 		effect.requestAnimationFrame( render );
 
@@ -764,7 +772,10 @@ function init() {
 	} )
 
 	var l = new THREE.LoadingManager(
-		function() { console.log( 'onLoad' ); prepare(); },
+		function() {
+			console.log( 'onLoad' );
+			prepare();
+		},
 		function( item, loaded, total ) {
 			progressIndicator( loaded * 90 / total )
 		},
@@ -784,6 +795,38 @@ function init() {
 	var m = new THREE.OBJLoader( l );
 	m.load( 'assets/hall.obj', function( m ) { roomModel = m; } );
 	m.load( 'assets/orb.obj', function( m ) { cubeModel = m; } );
+
+	var audioLoader = new THREE.AudioLoader( l );
+
+	var listener = new THREE.AudioListener();
+	listener.setMasterVolume( 0 );
+	camera.add( listener );
+
+	var ambientSound1 = new THREE.Audio( listener );
+	audioLoader.load( 'assets/154902__unfa__low-hum.mp3', function( buffer ) {
+		ambientSound1.setBuffer( buffer );
+		ambientSound1.setLoop(true);
+		ambientSound1.setVolume(0.25);
+		ambientSound1.play();
+	});
+
+	var ambientSound2 = new THREE.Audio( listener );
+	audioLoader.load( 'assets/221570__alaskarobotics__ambient-spacecraft-hum.mp3', function( buffer ) {
+		ambientSound2.setBuffer( buffer );
+		ambientSound2.setLoop(true);
+		ambientSound2.setVolume(0.5);
+		ambientSound2.play();
+	});
+
+	var orbSound = new THREE.PositionalAudio( listener );
+	sounds[ 'orb' ] = orbSound;
+	audioLoader.load( 'assets/222610__jordivburgel__cinematic-drone-1.mp3', function( buffer ) {
+		console.log( 'sound' );
+		orbSound.setBuffer( buffer );
+		orbSound.setLoop(true);
+		orbSound.setRefDistance( 1 );
+		orbSound.play();
+	});
 
 }
 
