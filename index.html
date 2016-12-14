@@ -67,7 +67,7 @@
 			<p>Available for Google Cardboard, Oculus Rift and HTC Vive.</p>
 			<p><b>If your computer can handle it, press 'm' to turn metaballs on!</b></p>
 
-			<p><a href="#" id="startBtn">Start</a></p>
+			<!--<p><a href="#" id="startBtn">Start</a></p>-->
 
 			<p>Read more about the project: <a href="http://www.clicktorelease.com/blog/making-of-cruciform" rel="external">Making of</a>.</p>
 			<p>Enjoy! <i><a href="http://twitter.com/thespite" rel="external">@thespite</a> + <a href="https://twitter.com/sejnulla/" rel="external">@sejnulla</a></i></p>
@@ -560,6 +560,7 @@ function init() {
 				if (vrDisplay.stageParameters) {
 					//setStageDimensions(vrDisplay.stageParameters);
 				}
+				effect.requestPresent();
 				document.body.appendChild( WEBVR.getButton( effect ) );
 			}
 		});
@@ -821,12 +822,14 @@ function onWindowResize() {
 	camera.updateProjectionMatrix();
 
 }
-
+/*
 document.getElementById( 'startBtn' ).addEventListener( 'click', function( e ) {
 	document.getElementById( 'selection' ).style.display = 'none'
 	init()
 	e.preventDefault()
 } );
+*/
+init();
 
 </script>
 </body>
