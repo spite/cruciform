@@ -5,8 +5,8 @@
 	<meta charset="utf-8">
 	<title>cru·ci·form</title>
 
-	<!-- Origin Trial Token, feature = WebVR, origin = https://www.clicktorelease.com, expires = 2017-01-25 -->
-	<meta http-equiv="origin-trial" data-feature="WebVR" data-expires="2017-01-25" content="AngfjTm+gadvZ4UQrCEgNUM9NXjJguzJSuHvH93QA1QInNygmcqHTBaIvQfmWWAcAlCt8sY0LIHuVhHqQqIx1AoAAABVeyJvcmlnaW4iOiJodHRwczovL3d3dy5jbGlja3RvcmVsZWFzZS5jb206NDQzIiwiZmVhdHVyZSI6IldlYlZSIiwiZXhwaXJ5IjoxNDg1MzUzNjY2fQ==">
+	<!-- Origin Trial Token, feature = WebVR, origin = https://www.clicktorelease.com, expires = 2017-04-04 -->
+<meta http-equiv="origin-trial" data-feature="WebVR" data-expires="2017-04-04" content="AuYBjZK/t6629y6frpM9d4QSpv/QVTysFbBbCacv6nfqxSkeagbUHgwtpyXOk6/dQDmn+b9CcarcYOXbbiDWFAQAAABoeyJvcmlnaW4iOiJodHRwczovL3d3dy5jbGlja3RvcmVsZWFzZS5jb206NDQzIiwiZmVhdHVyZSI6IldlYlZSIiwiZXhwaXJ5IjoxNDkxMzM3MDEwLCJpc1N1YmRvbWFpbiI6dHJ1ZX0=">
 
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
@@ -83,6 +83,7 @@
 <script src="js/VRControls.js"></script>
 <script src="js/webvr-polyfill.js"></script>
 <script src="js/WebVR.js"></script>
+<script src="js/WebVRCamera.js"></script>
 
 <script type="x-shader/x-vertex" id="vertexShader">
 
@@ -554,6 +555,7 @@ function init() {
 		navigator.getVRDisplays().then(function(displays) {
 			if (displays.length > 0) {
 				vrDisplay = displays[0];
+				camera = new THREE.WebVRCamera( vrDisplay, renderer );
 				effect = new THREE.VREffect( renderer );
 				effect.setVRDisplay( vrDisplay );
 				controls = new THREE.VRControls( camera );
