@@ -828,6 +828,18 @@ function init() {
 		orbSound.play();
 	});
 
+	document.addEventListener( 'visibilitychange', function( e ) {
+		if( document.visibilityState === 'visible' ) {
+			ambientSound1.setVolume( 0.25 );
+			ambientSound2.setVolume( 0.5 );
+			orbSound.setVolume( 1 );
+		} else {
+			ambientSound1.setVolume( 0 );
+			ambientSound2.setVolume( 0 );
+			orbSound.setVolume( 0 );
+		}
+	});
+
 }
 
 function render( timestamp ) {
