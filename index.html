@@ -496,7 +496,6 @@ void main()  {
 				},
 				vertexShader: this.get( 'depth-vs' ),
 				fragmentShader: this.get( 'depth-fs' ),
-				shading: THREE.SmoothShading
 			} );
 		} );
 
@@ -620,7 +619,7 @@ void main()  {
 
 			scene.overrideMaterial = baseMaterial;
 			sphere.visible = false;
-			cubeCamera.updateCubeMap( renderer, scene );
+			cubeCamera.update( renderer, scene );
 			scene.overrideMaterial = null;
 			cubeMapGenerated = true;
 			sphere.visible = true;
