@@ -79,11 +79,7 @@
 <script src="js/BufferGeometryUtils.js"></script>
 <script src="js/OBJLoader.js"></script>
 <script src="js/OrbitControls.js"></script>
-<script src="js/VREffect.js"></script>
-<script src="js/VRControls.js"></script>
-<script src="js/webvr-polyfill.js"></script>
 <script src="js/WebVR.js"></script>
-<script src="js/WebVRCamera.js"></script>
 
 <script type="x-shader/x-vertex" id="vertexShader">
 
@@ -434,9 +430,6 @@ for( var j = 0; j < links.length; j++ ) {
 	}, false );
 }
 
-var vrDisplay;
-
-var effect, controls;
 var user = new THREE.Object3D();
 
 var scene, camera, controls, renderer, cubeCamera, cubeMapGenerated = false;
@@ -548,40 +541,8 @@ function init() {
 	if( hashOptions.scale != undefined ) pixelRatioScale = hashOptions.scale?.5:1;
 	renderer.setPixelRatio( pixelRatioScale * window.devicePixelRatio );
 	renderer.setClearColor( 0xffffff );
+  renderer.vr.enabled = true;
 	var textureLOD = null;//renderer.context.getExtension( 'EXT_shader_texture_lod' );
-
-	if( 'getVRDisplays' in navigator ) {
-
-		navigator.getVRDisplays().then(function(displays) {
-			if (displays.length > 0) {
-				vrDisplay = displays[0];
-				camera = new THREE.WebVRCamera( vrDisplay, renderer );
-				effect = new THREE.VREffect( renderer );
-				effect.setVRDisplay( vrDisplay );
-				controls = new THREE.VRControls( camera );
-				controls.standing = true;
-				controls.setVRDisplay( vrDisplay );
-				if (vrDisplay.stageParameters) {
-					//setStageDimensions(vrDisplay.stageParameters);
-				}
-				effect.requestPresent();
-				document.body.appendChild( WEBVR.getButton( effect ) );
-			}
-		});
-
-	} else {
-
-		user.position.y = 1.6;
-		camera.position.set( -.1, 0, 0 );
-		camera.lookAt( new THREE.Vector3( 0, 0, -2 ) );
-		controls = new THREE.OrbitControls( camera, renderer.domElement );
-		effect = {
-			setSize: function( w, h ) { renderer.setSize( w, h ) },
-			requestAnimationFrame: function( c ) { requestAnimationFrame( c ) },
-			render: function( s, c ) { renderer.render( s, c ); }
-		}
-
-	}
 
 	var fragmentPrefix = '';
 	if( textureLOD ) fragmentPrefix = '#define TEXTURELOD';
@@ -590,7 +551,6 @@ function init() {
 	scene.add( cubeCamera );
 
 	window.addEventListener( 'resize', onWindowResize );
-	window.addEventListener('vrdisplaypresentchange', function( e ) { console.log( e ); onWindowResize() }, true);
 
 	var diffuseTexture, normalTexture, specularTexture, displacementTexture;
 	var diffuseOrbTexture, normalOrbTexture, specularOrbTexture, lightOrbTexture;
@@ -731,7 +691,7 @@ function init() {
 		scene.overrideMaterial = baseMaterial;
 		sphere.visible = false;
 		metaballs.visible = false;
-		cubeCamera.updateCubeMap( renderer, scene );
+		cubeCamera.update( renderer, scene );
 		scene.overrideMaterial = null;
 		cubeMapGenerated = true;
 		sphere.visible = true;
@@ -754,6 +714,7 @@ function init() {
 		startRendering();
 
 		document.getElementById( 'progress' ).style.opacity = 0;
+    document.body.appendChild( WEBVR.createButton( renderer ) );
 
 	}
 
@@ -763,7 +724,7 @@ function init() {
 
 		document.getElementById( 'selection' ).style.display = 'none'
 		onWindowResize();
-		effect.requestAnimationFrame( render );
+    renderer.setAnimationLoop( render );
 
 	}
 
@@ -859,8 +820,6 @@ function render( timestamp ) {
 	sphere.position.x = 4 * Math.cos( .0001 * t );
 	sphere.position.y = 2 + 1 * Math.cos( .00011 * t );
 
-	controls.update();
-
 	var viewInv = new THREE.Matrix4().getInverse( sphere.matrixWorld );
 	var e = viewInv.elements;
 	var viewRot = new THREE.Matrix3().set( e[0],e[1],e[2], e[4],e[5],e[6], e[8],e[9],e[10] );
@@ -868,15 +827,13 @@ function render( timestamp ) {
 	roomModel.children[ 0 ].material.uniforms.rotMatrix.value.identity();
 	sphere.material.uniforms.rotMatrix.value.copy( viewRot );
 
-	effect.render( scene, camera );
-	effect.requestAnimationFrame( render );
+	renderer.render( scene, camera );
 
 }
 
 function onWindowResize() {
 
 	renderer.setSize(window.innerWidth, window.innerHeight);
-	effect.setSize(window.innerWidth, window.innerHeight);
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
 
