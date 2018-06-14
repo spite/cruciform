@@ -5,8 +5,10 @@
 	<meta charset="utf-8">
 	<title>cru·ci·form</title>
 
-	<!-- Origin Trial Token, feature = WebVR, origin = https://www.clicktorelease.com, expires = 2017-04-04 -->
-<meta http-equiv="origin-trial" data-feature="WebVR" data-expires="2017-04-04" content="AuYBjZK/t6629y6frpM9d4QSpv/QVTysFbBbCacv6nfqxSkeagbUHgwtpyXOk6/dQDmn+b9CcarcYOXbbiDWFAQAAABoeyJvcmlnaW4iOiJodHRwczovL3d3dy5jbGlja3RvcmVsZWFzZS5jb206NDQzIiwiZmVhdHVyZSI6IldlYlZSIiwiZXhwaXJ5IjoxNDkxMzM3MDEwLCJpc1N1YmRvbWFpbiI6dHJ1ZX0=">
+	<!-- Origin Trial Token, feature = WebVR (For Chrome M62+), origin = https://clicktorelease.com, expires = 2018-07-26 -->
+  <meta http-equiv="origin-trial" data-feature="WebVR (For Chrome M62+)" data-expires="2018-07-26" content="AnEEXsMqTPfq7gbwgaii3ZgIdKRLmv51S0pLP0XDw1K89URbtxQtruTx/ba9nk1ao7gWAEXJG4RWLnu+lCvueQIAAABqeyJvcmlnaW4iOiJodHRwczovL2NsaWNrdG9yZWxlYXNlLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViVlIxLjFNNjIiLCJleHBpcnkiOjE1MzI1NjU4NTEsImlzU3ViZG9tYWluIjp0cnVlfQ==">
+  <!-- Origin Trial Token, feature = WebXR Device API, origin = https://clicktorelease.com, expires = 2018-07-26 -->
+  <meta http-equiv="origin-trial" data-feature="WebXR Device API" data-expires="2018-07-26" content="AmEpzaLnaS2wMPHGtp6lVsbpxEdIdlK9Jea4gx9myaDdEnjj6JEEK4hGutgk+OLnB/10+1VeQMne0Wr8zZoEewIAAABqeyJvcmlnaW4iOiJodHRwczovL2NsaWNrdG9yZWxlYXNlLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViWFJEZXZpY2UiLCJleHBpcnkiOjE1MzI1NjU4NTEsImlzU3ViZG9tYWluIjp0cnVlfQ==">
 
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
@@ -532,6 +534,7 @@ function init() {
 	scene = new THREE.Scene();
 	var aspectRatio = window.innerWidth / window.innerHeight;
 	camera = new THREE.PerspectiveCamera( 75, aspectRatio, .01, 30 );
+  camera.position.y = 2;
 	user.add( camera );
 	scene.add( user );
 
