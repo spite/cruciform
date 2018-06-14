@@ -444,7 +444,7 @@ var centerVector = new THREE.Vector2( 0, 0 );
 var baseMaterial, shinyMaterial;
 
 var roomModel, cubeModel;
-var metaballs;
+var metaballs, metaballsMesh;
 
 var progressIndicator = ( function getProgressFn() {
 
@@ -517,11 +517,11 @@ function addMetaballs() {
 	//material = new THREE.MeshNormalMaterial();
 
 	metaballs = new THREE.MarchingCubes( resolution, material, true, false );
-	//metaballs = new THREE.Mesh( new THREE.IcosahedronGeometry( .5, 3 ), material );
-	metaballs.position.y = 1;
-	scene.add( metaballs );
+	metaballsMesh = new THREE.Mesh( metaballs.generateBufferGeometry(), material );
+	metaballsMesh.position.y = 1;
+	scene.add( metaballsMesh );
 
-	metaballs.visible = false;
+	metaballsMesh.visible = false;
 
 	updateCubes( metaballs, 0, numBlobs );
 
@@ -537,6 +537,7 @@ function init() {
   camera.position.y = 2;
 	user.add( camera );
 	scene.add( user );
+  controls = new THREE.OrbitControls(camera);
 
 	renderer = new THREE.WebGLRenderer( { antialias: true });
 	document.body.appendChild( renderer.domElement );
@@ -682,7 +683,7 @@ function init() {
 
 		addMetaballs();
 
-		metaballs.material.uniforms.cubeMapSize.value.copy( shinyMaterial.uniforms.cubeMapSize.value )
+		metaballsMesh.material.uniforms.cubeMapSize.value.copy( shinyMaterial.uniforms.cubeMapSize.value )
 
 		progressIndicator( 95 );
 
@@ -693,12 +694,12 @@ function init() {
 
 		scene.overrideMaterial = baseMaterial;
 		sphere.visible = false;
-		metaballs.visible = false;
+		metaballsMesh.visible = false;
 		cubeCamera.update( renderer, scene );
 		scene.overrideMaterial = null;
 		cubeMapGenerated = true;
 		sphere.visible = true;
-		metaballs.visible = true;
+		metaballsMesh.visible = true;
 
 		progressIndicator( 96 );
 
@@ -813,10 +814,12 @@ function render( timestamp ) {
 	var t = performance.now();
 
 	if( showMetaballs ) {
-		metaballs.visible = true;
+		metaballsMesh.visible = true;
 		updateCubes( metaballs, .0005 * t, numBlobs );
+    metaballsMesh.geometry.dispose();
+    metaballsMesh.geometry = metaballs.generateBufferGeometry();
 	} else {
-		metaballs.visible = false;
+		metaballsMesh.visible = false;
 	}
 
 	sphere.rotation.y += .01;
