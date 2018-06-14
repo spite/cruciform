@@ -459,9 +459,17 @@ var progressIndicator = ( function getProgressFn() {
 var isMobile = 'ontouchstart' in window;
 var hashOptions = {};
 
+var url = window.location.hash.substr(1);
+var hashFields = url.split( '&' );
+hashFields.forEach( function( e ) {
+  var f = e.split( '=' );
+  var obj = {}
+  hashOptions[ f [ 0 ] ] = f[ 1 ];
+} );
+
 var resolution = 50, numBlobs = 10;
 
-var showMetaballs = false;
+var showMetaballs = hashOptions['metaballs'] || false;
 
 function updateCubes( object, time, numblobs, floor, wallx, wallz ) {
 
@@ -534,15 +542,18 @@ function init() {
 	scene = new THREE.Scene();
 	var aspectRatio = window.innerWidth / window.innerHeight;
 	camera = new THREE.PerspectiveCamera( 75, aspectRatio, .01, 30 );
-  camera.position.y = 2;
+  camera.position.set( 0, 2, 0 );
 	user.add( camera );
 	scene.add( user );
+  camera.lookAt(10,2,0);
   controls = new THREE.OrbitControls(camera);
+  controls.enableZoom = false;
+  controls.enablePan = false;
 
 	renderer = new THREE.WebGLRenderer( { antialias: true });
 	document.body.appendChild( renderer.domElement );
 	var pixelRatioScale = isMobile?.5:1;
-	if( hashOptions.scale != undefined ) pixelRatioScale = hashOptions.scale?.5:1;
+	if( hashOptions.scale != undefined ) pixelRatioScale = hashOptions.scale;
 	renderer.setPixelRatio( pixelRatioScale * window.devicePixelRatio );
 	renderer.setClearColor( 0xffffff );
   renderer.vr.enabled = true;
@@ -718,7 +729,7 @@ function init() {
 		startRendering();
 
 		document.getElementById( 'progress' ).style.opacity = 0;
-    document.body.appendChild( WEBVR.createButton( renderer ) );
+    document.body.appendChild( WEBVR.createButton( renderer, { frameOfReferenceType: 'eyeLevel' } ) );
 
 	}
 
